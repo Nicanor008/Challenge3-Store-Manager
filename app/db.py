@@ -23,7 +23,8 @@ def tables():
         employeeno INT PRIMARY KEY NOT NULL,
         username TEXT NOT NULL,
         email CHAR(64) NOT NULL,
-        password CHAR(64) NOT NULL
+        password CHAR(64) NOT NULL,
+        role TEXT NOT NULL
     )"""
 
     products = """CREATE TABLE products(
