@@ -21,7 +21,7 @@ def create_tables():
 def tables():
     users = """CREATE TABLE users(
         employeeno INT PRIMARY KEY NOT NULL,
-        name TEXT NOT NULL,
+        username TEXT NOT NULL,
         email CHAR(64) NOT NULL,
         password CHAR(64) NOT NULL
     )"""
@@ -31,15 +31,15 @@ def tables():
         product_category TEXT NOT NULL,
         product_name TEXT NOT NULL,
         product_quantity TEXT NOT NULL,
-        price INT NOT NULL
+        price INT NOT NULL,
+        added_by INT NOT NULL
     )"""
     
     sales = """CREATE TABLE sales(
         salesid INT PRIMARY KEY NOT NULL,
-        product_category TEXT NOT NULL,
-        product_name TEXT NOT NULL,
+        productid INT NOT NULL,
         product_quantity TEXT NOT NULL,
-        price INT NOT NULL
+        total_price INT NOT NULL,
         attended_by INT NOT NULL
     )"""
 
