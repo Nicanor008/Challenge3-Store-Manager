@@ -4,6 +4,7 @@ from instance.config import app_config
 from flask_jwt_extended import JWTManager
 from app.models.db import create_tables
 from app.views.users import Register, Login
+from app.views.products import Products, UpdateProduct, DeleteProduct
 
 
 version2 = Blueprint('api', __name__, url_prefix='/')
@@ -21,6 +22,9 @@ def create_app():
 
     api.add_resource(Register, 'auth/signup')
     api.add_resource(Login, 'auth/login')
+    api.add_resource(Products, 'products')
+    api.add_resource(UpdateProduct, 'products/<prodid>')
+    api.add_resource(DeleteProduct, 'products/<prodid>')
 
     app.config['JWT_SECRET_KEY'] = 'thisismysecretkey'
     jwt = JWTManager(app)
