@@ -1,15 +1,7 @@
-import unittest 
-import json
-from app import create_app
+from base_test import BaseTest
 
-
-class TestRegister(unittest.TestCase):
-
-    def setUp(self):
-        self.app = create_app()
-        self.app.testing = True
-        self.client = self.app.test_client()
-    
+class TestRegister(BaseTest):
+   
     # test register a store attendant 
     def test_RegisterAttendant(self):
         response = self.client.post(
