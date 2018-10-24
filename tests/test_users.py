@@ -10,31 +10,15 @@ class TestRegister(unittest.TestCase):
         self.app.testing = True
         self.client = self.app.test_client()
     
-    # test register a store admin
-    def test_RegisterAdmin(self):
-        response = self.client.post(
-            '/auth/register',
-            data=json.dumps(dict(
-                employeeno=1234,
-                username="Nic",
-                email="nicki@nic.com",
-                password="nicki",
-                role="admin"
-            )),
-            content_type='application/json'
-        )
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200, result['response'])
-
     # test register a store attendant 
-    def test_RegisterAdmin(self):
+    def test_RegisterAttendant(self):
         response = self.client.post(
             '/auth/register',
             data=json.dumps(dict(
                 employeeno=1234,
-                username="Nic",
-                email="nicki@nic.com",
-                password="nicki",
+                username="Nicque",
+                email="nicque@nic.com",
+                password="nicque",
                 role="attendant"
             )),
             content_type='application/json'
@@ -42,6 +26,7 @@ class TestRegister(unittest.TestCase):
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200, result['response'])
 
+    # test admin login
     def test_AdminLogin(self):
         response = self.client.post(
             '/auth/login',
@@ -56,6 +41,27 @@ class TestRegister(unittest.TestCase):
             self.assertEqual(response.status_code, 200, result['response'])
         else:
             self.assertEqual(response.status_code, 401, result['response'])
+    
+    # test attendant login
+    def test_AttendantLogin(self):
+        response = self.client.post(
+            '/auth/login',
+            data = json.dumps(dict(
+                email="nicque@nic.com",
+                password = "nicque"
+            )),
+            content_type = 'application/json'
+        )
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 200, result['response'])
+    
+    # tests to logout all users, involves deletion of tokens
+    def test_logout(self):
+        response = self.client.delete(
+            '/auth/logout',
+            content_type = 'application/json'
+        )
+        self.assertEqual(response.status_code, 200)
 
 
         
