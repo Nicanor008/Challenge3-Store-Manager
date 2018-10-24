@@ -1,3 +1,4 @@
+import json
 from base_test import BaseTest
 
 class TestRegister(BaseTest):
@@ -29,10 +30,8 @@ class TestRegister(BaseTest):
             content_type = 'application/json'
         )
         result = json.loads(response.data.decode('utf-8'))
-        if result:
-            self.assertEqual(response.status_code, 200, result['response'])
-        else:
-            self.assertEqual(response.status_code, 401, result['response'])
+        self.token_admin = result["token"]
+        self.assertEqual(response.status_code, 200, result['response'])
     
     # test attendant login
     def test_AttendantLogin(self):
@@ -45,6 +44,7 @@ class TestRegister(BaseTest):
             content_type = 'application/json'
         )
         result = json.loads(response.data.decode('utf-8'))
+        self.token_attendant = result['token']
         self.assertEqual(response.status_code, 200, result['response'])
     
     # tests to logout all users, involves deletion of tokens
