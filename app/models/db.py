@@ -1,6 +1,6 @@
 import psycopg2
 
-url = "dbname='storemanager' host='localhost' port='5432' user='postgres' password=''"
+url = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
 
 def connection(url):
     con = psycopg2.connect(url)
@@ -19,14 +19,15 @@ def create_tables():
     conn.commit()
 
 def tables():
-    users = """CREATE TABLE users(
+    users = """CREATE TABLE IF NOT EXISTS users(
         employeeno INT PRIMARY KEY NOT NULL,
-        name TEXT NOT NULL,
+        username TEXT NOT NULL,
         email CHAR(64) NOT NULL,
-        password CHAR(64) NOT NULL
+        password CHAR(64) NOT NULL,
+        role TEXT NOT NULL
     )"""
 
-    products = """CREATE TABLE products(
+    products = """CREATE TABLE IF NOT EXISTS products(
         productid INT PRIMARY KEY NOT NULL,
         product_category TEXT NOT NULL,
         product_name TEXT NOT NULL,
@@ -34,12 +35,12 @@ def tables():
         price INT NOT NULL
     )"""
     
-    sales = """CREATE TABLE sales(
+    sales = """CREATE TABLE IF NOT EXISTS sales(
         salesid INT PRIMARY KEY NOT NULL,
         product_category TEXT NOT NULL,
         product_name TEXT NOT NULL,
         product_quantity TEXT NOT NULL,
-        price INT NOT NULL
+        price INT NOT NULL,
         attended_by INT NOT NULL
     )"""
 
