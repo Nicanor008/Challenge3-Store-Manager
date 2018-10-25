@@ -23,7 +23,7 @@ class Products(Resource, productsData):
         product_quantity =data["product_quantity"]
         price = data["price"]   
 
-        result = self.user.add_user(productid, product_category, product_name, product_quantity,price)
+        self.user.add_user(productid, product_category, product_name, product_quantity,price)
         return {'response':'product added successfully'}
     
 class UpdateProduct(Resource):
@@ -40,7 +40,7 @@ class UpdateProduct(Resource):
         product_quantity =data["product_quantity"]
         price = data["price"] 
 
-        result = productsData().update_product(productid, product_category, product_name, product_quantity, price)
+        productsData().update_product(productid, product_category, product_name, product_quantity, price)
         return {'response':'product updated'}
 
 class DeleteProduct(Resource):
@@ -49,5 +49,5 @@ class DeleteProduct(Resource):
 
         # if not data:
         #     return {"message":"fields cannot be empty"}
-        result = productsData().delete_product()
+        productsData().delete_product()
         return {'response':'product deleted'}

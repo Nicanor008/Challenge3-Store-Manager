@@ -57,6 +57,6 @@ class productsData():
 
     def delete_product(self):
 
-        query = """DELETE FROM products WHERE productid=%(prodid)s"""
+        query = """DELETE FROM products WHERE productid=%(prodid)s """
         self.curr.execute(query)
         return self.db.commit()
