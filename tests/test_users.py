@@ -27,7 +27,7 @@ class TestRegister(unittest.TestCase):
         self.assertEqual(response.status_code, 200, result['response'])
 
     # test register a store attendant 
-    def test_RegisterAdmin(self):
+    def test_RegisterAttendant(self):
         response = self.client.post(
             '/auth/register',
             data=json.dumps(dict(
