@@ -13,14 +13,11 @@ This is a store manager API endpoints that implements CRUD functionality to be u
 ### API Endpoints
 | API Endpoint | Functionality |
 | -----------  | ------------- |
-| POST /api/v1/auth/register |  Register a new user |
-| POST /api/v1/auth/login |  Logins in a user and generates a token |
-| GET /api/v1/products |  Fetch all products |
-| POST /api/v1/products |  Create a single product into products list |
-| GET /api/v1/products/<productsId> |  Fetch a single product into products list |
-| GET /api/v1/sales |  Fetch all sale records |
-| POST /api/v1/sales |  Create sale records into sales list |
-| GET /api/v1/sales/<salesId> |  Fetch a sale record into sale list |
+| POST /auth/signup |  Register a new user |
+| POST /auth/login |  Logins in a user and generates a token |
+| GET /products |  Fetch all products |
+| POST /products |  Create a single product into products list |
+| GET /products/<productsId> |  Fetch a single product into products list |
 
 
 ### How to run tests
