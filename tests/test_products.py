@@ -4,7 +4,7 @@ import json
 class TestProducts(BaseTest):
     def test_post_product(self):
         response = self.client.post(
-            '/products',
+            self.products,
             data=json.dumps(self.products),
             headers=dict(Authorization = "Bearer " + self.token_admin),
             content_type='application/json'
@@ -16,7 +16,7 @@ class TestProducts(BaseTest):
     # test modify a single product. Accessible to only admin
     def test_modifyProduct(self):
         self.client.post(
-            '/products',
+            self.products,
             data=json.dumps({
                 "productsid":12374,
                 "product_category" : "Smartphones",
@@ -29,7 +29,7 @@ class TestProducts(BaseTest):
             content_type='application/json'
         )
         response = self.client.put(
-            '/products/123444',
+            self.products+'/123444',
             headers=dict(Authorization = "Bearer " + self.token_admin ),
             data=json.dumps(self.product_update),
             content_type='application/json'
@@ -47,7 +47,7 @@ class TestProducts(BaseTest):
     def test_deleteProduct(self):
         # add a product first then delete it
         self.client.post(
-            '/products',
+            self.products,
             data=json.dumps({
                 "productsid":1374,
                 "product_category" : "Smartphones",
@@ -60,7 +60,7 @@ class TestProducts(BaseTest):
             content_type='application/json'
         )
         response = self.client.delete(
-            '/products/123444',
+            self.products+'/123444',
             headers=dict(Authorization = "Bearer " + self.token_admin),
             content_type='application/json'
         )
@@ -76,7 +76,7 @@ class TestProducts(BaseTest):
     # def test_get_products(self):
     #      # add a product first then delete it
     #     response = self.client.get(
-    #         '/products',
+    #         self.products,
     #         headers=dict(Authorization = "Bearer " + self.token_admin),
     #         content_type='application/json'
     #     )

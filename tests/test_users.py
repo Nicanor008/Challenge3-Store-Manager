@@ -1,19 +1,13 @@
-import unittest 
+# import unittest 
 import json
-from app import create_app
+from base_test import BaseTest
 
 
-class TestRegister(unittest.TestCase):
-
-    def setUp(self):
-        self.app = create_app()
-        self.app.testing = True
-        self.client = self.app.test_client()
-    
+class TestRegister(BaseTest):  
     # test register a store admin
     def test_Register_user(self):
         response = self.client.post(
-            '/auth/signup',
+            self.register,
             data=json.dumps(dict(
                 employeeno=1234,
                 username="Nic",
@@ -30,7 +24,7 @@ class TestRegister(unittest.TestCase):
         #test wrong email address 
     def test_wrong_email(self):
         response = self.client.post(
-            '/auth/signup',
+            self.register,
             data=json.dumps(dict(
                 employeeno=1234,
                 username="Nic",
@@ -47,7 +41,7 @@ class TestRegister(unittest.TestCase):
     # blank password
     def test_incorrect_email(self):
         response = self.client.post(
-            '/auth/signup',
+            self.register,
             data=json.dumps(dict(
                 employeeno=1234,
                 username="Nic",
@@ -64,7 +58,7 @@ class TestRegister(unittest.TestCase):
     # blank email address
     def test_incorrect_password(self):
         response = self.client.post(
-            '/auth/signup',
+            self.register,
             data=json.dumps(dict(
                 employeeno=1234,
                 username="Nic",
@@ -81,7 +75,7 @@ class TestRegister(unittest.TestCase):
 
     def test_successful_Login(self):
         response = self.client.post(
-            '/auth/login',
+            self.login,
             data = json.dumps(dict(
                 email="nicki@nic.com",
                 password = "nicki"
@@ -95,7 +89,7 @@ class TestRegister(unittest.TestCase):
     # empty email on login
     def test_empty_email_onLogin(self):
         response = self.client.post(
-            '/auth/login',
+            self.login,
             data = json.dumps(dict(
                 email="",
                 password = "nicki"
@@ -109,7 +103,7 @@ class TestRegister(unittest.TestCase):
     # empty password on login
     def test_empty_password_onLogin(self):
         response = self.client.post(
-            '/auth/login',
+            self.login,
             data = json.dumps(dict(
                 email="nic@nic.com",
                 password = ""
