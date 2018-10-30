@@ -3,8 +3,9 @@ from flask_restful import Api
 from instance.config import app_config
 from flask_jwt_extended import JWTManager
 from app.models.db import create_tables
-from app.views.users import Register, Login, Users
+from app.views.users import Register, Login, SingleUsers, All_Users
 from app.views.products import Products, UpdateProduct, DeleteProduct
+from app.models.users import users
 
 
 version2 = Blueprint('api', __name__, url_prefix='/')
@@ -25,18 +26,20 @@ def create_app():
     api.add_resource(Products, 'products')
     api.add_resource(UpdateProduct, 'products/<prodid>')
     api.add_resource(DeleteProduct, 'products/<prodid>')
-    api.add_resource(Users, 'auth/users')
+    api.add_resource(All_Users, 'auth/users')
+    api.add_resource(SingleUsers, 'auth/users/<email>')
+
 
     app.config['JWT_SECRET_KEY'] = 'thisismysecretkey'
     jwt = JWTManager(app)
     
-    # @jwt.user_claims_loader
-    # def add_claims_to_access_token(user):
-    #     return {'role':user['role']}
+    @jwt.user_claims_loader
+    def add_claims_to_access_token(user):
+        return {'role':user['role']}
 
-    # @jwt.user_identity_loader
-    # def user_identity_lookup(user):
-    #     return user['email']
+    @jwt.user_identity_loader
+    def user_identity_lookup(user):
+        return user["email"]
   
 
     # # token attempts to access an endpoint

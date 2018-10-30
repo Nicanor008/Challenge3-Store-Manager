@@ -2,7 +2,7 @@ import re
 import datetime
 from flask import request, jsonify
 from flask_restful import Resource
-from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
+from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt, get_jwt_claims)
 from app.models.users import UsersData
 from app.models.db import init_db
 
@@ -19,6 +19,8 @@ class Register(Resource, UsersData):
         self.user = UsersData()
 
     def post(self):
+        """add a store attendant to the database
+        """
         data = request.get_json()
 
         employee_no = data.get("employee_no")
@@ -27,7 +29,11 @@ class Register(Resource, UsersData):
         password = data.get("password")
         role = data.get("role")   
 
-        # handle already existing user
+        # if user already exists
+        user_exist = self.user.get_all_users()
+        check_user = [user for user in user_exist if user["email"]==email]
+        if len(check_user) != 0:
+            return jsonify ({"message":"product already exist"})
 
         # fields should not be empty
         if not data:
@@ -45,7 +51,7 @@ class Register(Resource, UsersData):
         elif not re.match(email_format, email):
             response = jsonify({"message": "Invalid Email address"})  
         else:
-            result = self.user.save(employee_no, username, email, password,role)
+            self.user.save(employee_no, username, email, password,role)
             response = {'message':'user added successfully'}
 
         return response
@@ -59,7 +65,10 @@ class Login(Resource, UsersData):
         self.curr = self.db.cursor()
 
     def post(self):
-        """login users"""
+        """login users
+        
+        users should be already registered 
+        """
         data = request.get_json()
 
         email = data["email"]
@@ -76,16 +85,42 @@ class Login(Resource, UsersData):
         else:
             current_user = self.user.login(email, password)            
             if current_user:
+                # a = get_jwt_identity()
                 expires = datetime.timedelta(minutes=60)
-                access_token = create_access_token(identity=email, expires_delta=expires)
+                # credentials = {'username':'', 'admin':''}
+                user = self.user.get_user(email)
+                access_token = create_access_token(identity=user, expires_delta=expires)
                 response = jsonify({"token":access_token, "message":"Login successful"})
             else:
                 response =  jsonify({"Message":"wrong login credentials"})
            
         return response
 
-class Users(Resource):
-    # fetch all users in database
+class SingleUsers(Resource):
+    """fetch single user in database using email
+
+    Only accessible to admin
+    """  
+    @jwt_required          
     def get(self, email):
+         # user must be an admin
+        claims = get_jwt_claims()
+        if claims['role'] != "admin":
+            return jsonify({"message": "Sorry, you don't have administrator rights"})
+        
         response = user.get_user(email)
         return jsonify({"Users":response})
+
+class All_Users(Resource):
+    """fetch all users in database
+    
+    only accessible to admin
+    """     
+    @jwt_required     
+    def get(self):
+         # user must be an admin
+        claims = get_jwt_claims()
+        if claims['role'] != "admin":
+            return jsonify({"message": "Sorry, you don't have administrator rights"})
+        response = user.get_all_users()
+        return response

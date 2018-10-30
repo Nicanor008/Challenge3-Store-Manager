@@ -17,11 +17,41 @@ class UsersData():
     
     def get_user(self, email):
         self.curr.execute("SELECT * FROM users WHERE email=%s", (email,))
-        data = self.curr.fetchone()
-        
-        # role = data['role']
+        user_data = self.curr.fetchone()
+        if not user_data:
+            return {"message":"User not found"}
 
-        return data
+        for user in user_data:
+            # email, password, role = user
+            user = dict(
+                email = user_data[2],
+                role = user_data[4],
+                password = user_data[1]
+            )
+            users.append(user)
+        return user
+    
+    def get_all_users(self):
+        self.curr.execute("SELECT * FROM users")
+        data = self.curr.fetchall()
+        users = []
+        for i,items in enumerate(data):
+            employee_no, username, email, password, role = items
+            fetched_data = dict(
+                employee_no = employee_no,
+                username = username,
+                email = email,
+                password = password,
+                role = role
+            )
+            user = [user for user in users if email == user["email"]]
+            if user:
+                response = users
+            else:
+                users.append(fetched_data)
+        response = users
+        return response
+        
 
         
          

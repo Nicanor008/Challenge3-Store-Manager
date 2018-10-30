@@ -11,7 +11,7 @@ class productsData():
     def get_all_products(self):
         self.curr.execute("SELECT * FROM products")
         data = self.curr.fetchall()
-        
+        product_list = []
         for i, items in enumerate(data):
             productid, product_category, product_name, product_quantity, price = items
             fetched_data = dict(
@@ -31,36 +31,20 @@ class productsData():
 
     def add_product(self, productid, product_category, product_name, product_quantity,price):
         # handle a product already exists
-        product = [product for product in product_list if productid != product["productid"]]
-        if not product:
-            response = {"message":"product already exist"}
-        else:
-            self.curr.execute("INSERT INTO products(productid, product_category, product_name, product_quantity,price) VALUES(%s, %s,  %s,  %s,  %s)", (productid, product_category, product_name, product_quantity, price,))
-            response = self.db.commit()
-            response = {'message':'product added successfully'}
-        return response
+        self.curr.execute("INSERT INTO products(productid, product_category, product_name, product_quantity,price) VALUES(%s, %s,  %s,  %s,  %s)", (productid, product_category, product_name, product_quantity, price,))
+        return self.db.commit()
     
     # update a product
     def update_product(self, productid, product_category, product_name, product_quantity,price, prodid):
+        """update an existing product model
         
-    #    product already exists
-
-
-        # user must be an admin
-        # claims = get_jwt_claims()
-        # if claims['role'] != "admin":
-        #     return {"message": "Sorry, you don't have administrator rights"}
-        product = [product for product in product_list if productid == product["productid"]]
-        if not product:
-            return {"products does not exist"}
-        else:
-            res = self.curr.execute("UPDATE products SET productid=%s, product_category=%s, product_name=%s, product_quantity=%s, price=%s WHERE productid=%s", (productid, product_category, product_name, product_quantity, price, prodid))
-            if res:
-                self.db.commit()
-                return 'success'
-            else:
-                return {'failed'}
+        """
+        self.curr.execute("UPDATE products SET productid=%s, product_category=%s, product_name=%s, product_quantity=%s, price=%s WHERE productid=%s", (productid, product_category, product_name, product_quantity, price, prodid))
+        return self.db.commit()
 
     def delete_product(self, prodid):
+        """delete a product model
+        
+        """
         self.curr.execute("DELETE FROM products WHERE productid=%s", (prodid,))
         return self.db.commit()
