@@ -20,29 +20,34 @@ def create_tables():
 
 def tables():
     users = """CREATE TABLE IF NOT EXISTS users(
-        employeeno INT PRIMARY KEY NOT NULL,
+        employee_no serial PRIMARY KEY INT NOT NULL,
         username TEXT NOT NULL,
-        email CHAR(64) NOT NULL,
+        email CHAR(64) UNIQUE NOT NULL,
         password CHAR(64) NOT NULL,
         role TEXT NOT NULL
     )"""
 
     products = """CREATE TABLE IF NOT EXISTS products(
-        productid INT PRIMARY KEY NOT NULL,
-        product_category TEXT NOT NULL,
+        product_id serial PRIMARY KEY NOT NULL,
+        category_id TEXT NOT NULL,
         product_name TEXT NOT NULL,
         product_quantity TEXT NOT NULL,
         price INT NOT NULL
     )"""
     
     sales = """CREATE TABLE IF NOT EXISTS sales(
-        salesid INT PRIMARY KEY NOT NULL,
-        product_category TEXT NOT NULL,
-        product_name TEXT NOT NULL,
+        sales_id serial PRIMARY KEY NOT NULL,
+        category_id INT NOT NULL,
+        product_id INT NOT NULL,
         product_quantity TEXT NOT NULL,
         price INT NOT NULL,
         attended_by INT NOT NULL
     )"""
 
-    queries = [users, products, sales]
+    product_categories = """"CREATE TABLE IF NOT EXISTS product_categories(
+        category_id serial PRIMARY KEY NOT NULL,
+        category_name TEXT NOT NULL
+    )"""
+
+    queries = [users, products, sales, product_categories]
     return queries
