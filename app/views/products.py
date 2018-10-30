@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
-from app.models.products import productsData
+from app.models.products import productsData, product_list
 
 class Products(Resource):
     """Admin to add products to database
@@ -53,11 +53,17 @@ class UpdateProduct(Resource):
         product_quantity =data.get("product_quantity")
         price = data.get("price") 
 
-        query_result = productsData().update_product(productid, product_category, product_name, product_quantity, price, prodid)
-        if query_result:
-            return {'message':'product updated'}
+
+        product = [product for product in product_list if productid == product["productid"]]
+        if not product:
+            print(product_list)
+            return {"message":"product does not exist"}
         else:
-            return {'message':'failed'}
+            query_result = productsData().update_product(productid, product_category, product_name, product_quantity, price, prodid)
+            if query_result:
+                return {'message':'product updated'}
+            else:
+                return {'message':'failed'}
 
 class DeleteProduct(Resource):
     def delete(self, prodid):

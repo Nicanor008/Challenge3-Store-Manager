@@ -10,35 +10,9 @@ class BaseTest(unittest.TestCase):
         self.client = self.app.test_client()
 
         # base tests url
-        self.register = '/auth/register'
+        self.register = '/auth/signup'
         self.login = '/auth/login'
         self.products = '/products'
-        # self.productsid = 
-
-        # register a store attendant 
-        self.register_attendant = self.client.post(
-            self.register,
-            data=json.dumps(dict(
-                employeeno=1234,
-                username="Nicque",
-                email="nicque@nic.com",
-                password="nicque",
-                role="attendant"
-            )),
-            content_type='application/json'
-        )
-
-        # login attendant and generate a token
-        self.login_admin = self.client.post(
-            self.login,
-            data = json.dumps(dict(
-                email="nii@nic.com",
-                password = "nicki"
-            )),
-            content_type = 'application/json'
-        )
-        result = json.loads(self.login_admin.data.decode('utf-8'))
-        self.token_admin = result["token"]
 
     # admin login to post products
         self.login_admin = self.client.post(

@@ -4,6 +4,7 @@ from flask import request, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
 from app.models.users import UsersData
+from app.models.db import init_db
 
 # The required format of an email-address
 email_format = r"(^[a-zA-z0-9_.]+@[a-zA-z0-9-]+\.[a-z]+$)"       
@@ -20,11 +21,11 @@ class Register(Resource, UsersData):
     def post(self):
         data = request.get_json()
 
-        employeeno = data["employeeno"]
-        username = data["username"]
-        email = data["email"]
-        password = data["password"]
-        role = data["role"]   
+        employeeno = data.get("employeeno")
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
+        role = data.get("role")   
 
         # handle already existing user
 
@@ -54,6 +55,8 @@ class Login(Resource, UsersData):
 
     def __init__(self):
         self.user = UsersData()
+        self.db = init_db()
+        self.curr = self.db.cursor()
 
     def post(self):
         """login users"""
@@ -71,13 +74,14 @@ class Login(Resource, UsersData):
         elif not re.match(email_format, email):
             response = jsonify({"message": "Invalid Email address"})
         else:
-            current_user = user.get_user(email)
-            # access_token = create_access_token(identity=current_user, expires_delta=expires)
-
-            self.user.login(email, password)
-            expires = datetime.timedelta(minutes=60)
-            access_token = create_access_token(identity=current_user, expires_delta=expires)
-            response = jsonify(token = access_token, message = "Login successful!")
+            current_user = self.user.login(email, password)            
+            if current_user:
+                expires = datetime.timedelta(minutes=60)
+                access_token = create_access_token(identity=email, expires_delta=expires)
+                response = jsonify({"token":access_token, "message":"Login successful"})
+            else:
+                response =  jsonify({"Message":"wrong login credentials"})
+           
         return response
 
 class Users(Resource):
