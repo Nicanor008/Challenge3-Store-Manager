@@ -21,7 +21,7 @@ class Register(Resource, UsersData):
     def post(self):
         data = request.get_json()
 
-        employeeno = data.get("employeeno")
+        employee_no = data.get("employee_no")
         username = data.get("username")
         email = data.get("email")
         password = data.get("password")
@@ -32,7 +32,7 @@ class Register(Resource, UsersData):
         # fields should not be empty
         if not data:
             response =  jsonify({"message":"Fields cannot be empty"})
-        elif not employeeno:
+        elif not employee_no:
             response =  jsonify({"message":"employee number cannot be blank"})
         elif not email:
             response =  jsonify({"message":"Email cannot be blank"})
@@ -45,7 +45,7 @@ class Register(Resource, UsersData):
         elif not re.match(email_format, email):
             response = jsonify({"message": "Invalid Email address"})  
         else:
-            result = self.user.save(employeeno, username, email, password,role)
+            result = self.user.save(employee_no, username, email, password,role)
             response = {'message':'user added successfully'}
 
         return response

@@ -12,13 +12,14 @@ class BaseTest(unittest.TestCase):
         # base tests url
         self.register = '/auth/signup'
         self.login = '/auth/login'
-        self.products = '/products'
+        self.products_url = '/products'
+        self.single_product_url = '/products/110'
 
     # admin login to post products
         self.login_admin = self.client.post(
             self.login,
             data = json.dumps(dict(
-                email="nicki@nic.com",
+                email="nic@nic.com",
                 password = "nicki"
             )),
             content_type = 'application/json'

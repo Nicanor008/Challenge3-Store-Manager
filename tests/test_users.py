@@ -9,7 +9,7 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps({
-                "employeeno":1234,
+                "employee_no":1234,
                 "username":"Nic",
                 "email":"nicki@nic.com",
                 "password":"nicki",
@@ -26,7 +26,7 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
-                employeeno=1234,
+                employee_no=1234,
                 username="Nic",
                 email="nickiniccom",
                 password="nicki",
@@ -43,7 +43,7 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
-                employeeno=12348,
+                employee_no=12348,
                 username="Nic",
                 email="nicki@nic.com",
                 password="",
@@ -60,7 +60,7 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
-                employeeno=12346,
+                employee_no=12346,
                 username="Nic",
                 email="",
                 password="nicki",

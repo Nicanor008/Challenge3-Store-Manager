@@ -20,15 +20,15 @@ def create_tables():
 
 def tables():
     users = """CREATE TABLE IF NOT EXISTS users(
-        employeeno INT PRIMARY KEY NOT NULL,
+        employee_no INT NOT NULL,
         username TEXT NOT NULL,
-        email CHAR(64) NOT NULL,
+        email CHAR(64) PRIMARY KEY NOT NULL,
         password CHAR(64) NOT NULL,
         role TEXT NOT NULL
     )"""
 
     products = """CREATE TABLE IF NOT EXISTS products(
-        productid INT PRIMARY KEY NOT NULL,
+        product_id INT PRIMARY KEY NOT NULL,
         product_category TEXT NOT NULL,
         product_name TEXT NOT NULL,
         product_quantity TEXT NOT NULL,
@@ -36,7 +36,7 @@ def tables():
     )"""
     
     sales = """CREATE TABLE IF NOT EXISTS sales(
-        salesid INT PRIMARY KEY NOT NULL,
+        sales_id INT PRIMARY KEY NOT NULL,
         product_category TEXT NOT NULL,
         product_name TEXT NOT NULL,
         product_quantity TEXT NOT NULL,

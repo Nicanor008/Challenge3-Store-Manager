@@ -7,8 +7,8 @@ class UsersData():
         self.db = init_db()
         self.curr = self.db.cursor()
 
-    def save(self, employeeno, username, email, password, role):
-        self.curr.execute("INSERT INTO users(employeeno, username, email, password, role) VALUES(%s, %s,  %s,  %s,  %s)", (employeeno, username, email, password, role))
+    def save(self, employee_no, username, email, password, role):
+        self.curr.execute("INSERT INTO users(employee_no, username, email, password, role) VALUES(%s, %s,  %s,  %s,  %s)", (employee_no, username, email, password, role))
         return self.db.commit()
 
     def login(self, email, password):
