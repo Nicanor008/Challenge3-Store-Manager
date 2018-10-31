@@ -82,14 +82,20 @@ class productsData():
         
         """
         # get category of the product category
-        self.curr.execute("SELECT category_id FROM products WHERE product_id=%s", (prodid,))
-        products_data = self.curr.fetchone()
-        print(products_data)
-        productId = products_data[0]
-        update_query = self.curr.execute("UPDATE product_categories SET category_name=%s WHERE category_id=%s", (product_category, productId))
-        if not update_query:
-            self.curr.execute("INSERT INTO product_categories(category_name) VALUES(%s)",(product_category,))
-            self.db.commit()
+        # self.curr.execute("SELECT category_id FROM products WHERE product_id=%s", (prodid,))
+        # products_data = self.curr.fetchone()
+        # productId = products_data[0]
+        # update_query = self.curr.execute("UPDATE product_categories SET category_name=%s WHERE category_id=%s", (product_category, productId))
+        # if not update_query:
+        #     self.curr.execute("INSERT INTO product_categories(category_name) VALUES(%s)",(product_category,))
+        #     self.db.commit()
+        # product_category = self.check_category()
+        # category = [category for category in product_category if category['category_name'] == product_category]
+        # print(category)
+        # if not category:
+        #     self.curr.execute("INSERT INTO product_categories(category_name) VALUES(%s)",(product_category,))
+        #     self.db.commit()
+        #     self.check_category()
         self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, prodid))
         return self.db.commit()
 

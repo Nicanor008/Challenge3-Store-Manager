@@ -26,7 +26,7 @@ class salesData():
         employee_no = user[0]
 
         self.curr.execute("INSERT INTO sales(category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (category_id, product_id, product_quantity, price,employee_no,))
-        self.db.commit() 
+        self.db.commit()
 
         # update product quantity after sale
         new_product_quantity = int(get_product_quantity) - int(product_quantity)
