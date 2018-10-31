@@ -45,8 +45,9 @@ class Products(Resource):
             return make_response(jsonify({"message":"Price is a required field"}))
         
         else:
-            self.user.check_category(product_category,product_name, product_quantity, price)
+            self.user.add_product(product_category,product_name, product_quantity, price)
             return make_response(jsonify({'message':'product added successfully'}))
+            # return make_response(jsonify({'message':data}))
 
         # return response
     
@@ -90,9 +91,10 @@ class UpdateProduct(Resource):
         elif not product_name:
             return make_response(jsonify({"message":"Product Name required"}))
         else:
-            self.user.update_product(product_category, product_name, product_quantity, price, prodid)
+            data = self.user.update_product(product_category, product_name, product_quantity, price, prodid)
             
             return make_response(jsonify({'message':'product successfully updated'}))
+
             
 
 class DeleteProduct(Resource):

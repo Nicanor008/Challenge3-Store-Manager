@@ -17,53 +17,62 @@ class productsData():
 
             # get product categories
             # self.curr.execute("SELECT category_name FROM product_categories WHERE category_id=%s",(category_id,))
-            # category = self.curr.fetchone()
+            # data = self.curr.fetchone()
             # product_category = category[0]
             # print(product_category)
+            data = self.check_category()
+            print(data)
+            # for 
+            product_category = data[1]
 
-            # fetched_data = dict(
-            #     productid = int(productid),
-            #     product_category = product_category,
-            #     product_name = product_name,
-            #     product_quantity = int(product_quantity),
-            #     price = price
-            # )
-            # product = [product for product in product_list if productid == product["productid"]]
-            # if product:
-            #     response = product_list
-            # else:
-            #     product_list.append(fetched_data)
+
+            fetched_data = dict(
+                productid = int(productid),
+                # product_category = product_category,
+                product_name = product_name,
+                product_quantity = int(product_quantity),
+                price = price
+            )
+            product = [product for product in product_list if productid == product["productid"]]
+            if product:
+                response = product_list
+            else:
+                product_list.append(fetched_data)
         response = product_list
         return response
 
-    def check_category(self, product_category,product_name, product_quantity, price):
+    def check_category(self):
         """add a product category
 
         pick an existing category if available
         """
         # check if category exists
-        query = "SELECT * FROM product_categories WHERE category_name= '%s';" % product_category
+        query = "SELECT * FROM product_categories"
         self.curr.execute(query)
-        data = self.curr.fetchone()
-        print(data)
-        category_id = data[0]
-        # category_name = data[1]
-        if not data:
-            # if category doesn't exist, add to the database
-            return self.add_category(product_category,product_name, product_quantity, price)
-
-        return self.add_product(category_id, product_name, product_quantity, price)
-        # print(product_category)
+        data = self.curr.fetchall()
+        categories = []
+        for i, items in enumerate(data):
+            category_id, category_name = items
+            fetched_categories = dict(
+                category_id=category_id,
+                category_name=category_name
+            )
+            categories.append(fetched_categories)
+        return categories
     
-    def add_category(self, product_category,product_name, product_quantity, price):
+    def add_category(self, product_category):
         # if category doesn't exist, add new category
         self.curr.execute("INSERT INTO product_categories(category_name) values(%s)",(product_category,))
-        self.db.commit()
-        return self.check_category(product_category,product_name, product_quantity, price)
+        return self.db.commit()
 
 
     def add_product(self,category_id, product_name, product_quantity,price):
-        # handle a product already exists
+        # check if product category exists
+        category = self.check_category()
+        check_category = [product for product in category if product['category_id']==category_id]
+        if check_category:
+            self.add_category
+            
         self.curr.execute("INSERT INTO products(category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", (category_id, product_name,product_quantity, price,))
         return self.db.commit()
     
