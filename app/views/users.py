@@ -23,7 +23,6 @@ class Register(Resource, UsersData):
         """
         data = request.get_json()
 
-        employee_no = data.get("employee_no")
         username = data.get("username")
         email = data.get("email")
         password = data.get("password")
@@ -31,15 +30,14 @@ class Register(Resource, UsersData):
 
         # if user already exists
         user_exist = self.user.get_all_users()
-        check_user = [user for user in user_exist if user["email"]==email]
-        if len(check_user) != 0:
+        check_user = [user_search for user_search in user_exist if user_search['email'] == email]
+        print(check_user)
+        if check_user:
             return jsonify ({"message":"product already exist"})
 
         # fields should not be empty
         if not data:
             response =  jsonify({"message":"Fields cannot be empty"})
-        elif not employee_no:
-            response =  jsonify({"message":"employee number cannot be blank"})
         elif not email:
             response =  jsonify({"message":"Email cannot be blank"})
         elif not password:
@@ -51,7 +49,7 @@ class Register(Resource, UsersData):
         elif not re.match(email_format, email):
             response = jsonify({"message": "Invalid Email address"})  
         else:
-            self.user.save(employee_no, username, email, password,role)
+            self.user.save( username, email, password,role)
             response = {'message':'user added successfully'}
 
         return response

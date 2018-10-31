@@ -20,7 +20,7 @@ def create_tables():
 
 def tables():
     users = """CREATE TABLE IF NOT EXISTS users(
-        employee_no serial PRIMARY KEY INT NOT NULL,
+        employee_no serial PRIMARY KEY NOT NULL,
         username TEXT NOT NULL,
         email CHAR(64) UNIQUE NOT NULL,
         password CHAR(64) NOT NULL,
@@ -44,7 +44,7 @@ def tables():
         attended_by INT NOT NULL
     )"""
 
-    product_categories = """"CREATE TABLE IF NOT EXISTS product_categories(
+    product_categories = """CREATE TABLE IF NOT EXISTS product_categories(
         category_id serial PRIMARY KEY NOT NULL,
         category_name TEXT NOT NULL
     )"""
