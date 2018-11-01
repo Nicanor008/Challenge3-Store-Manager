@@ -23,7 +23,7 @@ class salesData():
         user = self.curr.fetchone()
         employee_no = user[0]
 
-        self.curr.execute("INSERT INTO sales(category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
+        self.curr.execute("INSERT INTO sales (category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
         self.db.commit()
 
         # update product quantity after sale
