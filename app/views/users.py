@@ -4,7 +4,7 @@ from flask import request, jsonify, make_response
 from flask_restful import Resource
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt, get_jwt_claims)
 from app.models.users import UsersData
-# from app.models.db import init_db
+from app.models.db import init_db
 
 # The required format of an email-address
 email_format = r"(^[a-zA-z0-9_.]+@[a-zA-z0-9-]+\.[a-z]+$)"       
@@ -37,17 +37,17 @@ class Register(Resource, UsersData):
 
         # fields should not be empty
         if not data:
-            response =  make_response(jsonify({"message":"Fields cannot be empty"}), 404)
+            response =  make_response(jsonify({"message":"Fields cannot be empty"}), 400)
         elif not email:
-            response =  make_response(jsonify({"message":"Email cannot be blank"}), 404)
+            response =  make_response(jsonify({"message":"Email cannot be blank"}), 400)
         elif not password:
-            response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
+            response =  make_response(jsonify({"message":"Password field cannot be blank"}), 400)
         elif not username:
-            response =  make_response(jsonify({"message":"username field cannot be blank"}), 404)
+            response =  make_response(jsonify({"message":"username field cannot be blank"}), 400)
         elif not role:
-            response =  make_response(jsonify({"message":"role field cannot be blank"}), 404)
+            response =  make_response(jsonify({"message":"role field cannot be blank"}), 400)
         elif not re.match(email_format, email):
-            response = make_response(jsonify({"message": "Invalid Email address"}), 404)  
+            response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
         else:
             self.user.save( username, email, password,role)
             response = make_response(jsonify({'message':'user added successfully'}), 201)
@@ -60,7 +60,7 @@ class Login(Resource, UsersData):
     def __init__(self):
         self.user = UsersData()
         self.db = init_db()
-        self.curr = self.db.cursor()
+        self.curr = self.db.cursor
 
     def post(self):
         """login users
@@ -73,17 +73,15 @@ class Login(Resource, UsersData):
         password =data["password"]
 
         if not email:
-            response = make_response(jsonify({"message":"email required"}), 404)
+            response = make_response(jsonify({"message":"email required"}), 400)
         elif not password:
-            response = make_response(jsonify({"message":"password required"}), 404)
+            response = make_response(jsonify({"message":"password required"}), 400)
         elif not re.match(email_format, email):
             response = make_response(jsonify({"message": "Invalid Email address"}), 406)
         else:
             current_user = self.user.login(email, password)            
             if current_user:
-                # a = get_jwt_identity()
                 expires = datetime.timedelta(minutes=60)
-                # credentials = {'username':'', 'admin':''}
                 user = self.user.get_user(email)
                 access_token = create_access_token(identity=user, expires_delta=expires)
                 response = jsonify({"token":access_token, "message":"Login successful"})
@@ -97,6 +95,11 @@ class SingleUsers(Resource):
 
     Only accessible to admin
     """  
+    def __init__(self):
+        self.user = UsersData()
+        self.db = init_db()
+        self.curr = self.db.cursor
+
     @jwt_required          
     def get(self, email):
          # user must be an admin
@@ -104,19 +107,24 @@ class SingleUsers(Resource):
         if claims['role'] != "admin":
             return jsonify({"message": "Sorry, you don't have administrator rights"})
         
-        response = user.get_user(email)
+        response = self.user.get_user(email)
         return jsonify({"Users":response})
 
 class All_Users(Resource):
     """fetch all users in database
     
     only accessible to admin
-    """     
+    """  
+    def __init__(self):
+        self.user = UsersData()
+        self.db = init_db()
+        self.curr = self.db.cursor
+
     @jwt_required     
     def get(self):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
             return jsonify({"message": "Sorry, you don't have administrator rights"})
-        response = user.get_all_users()
+        response = self.user.get_all_users()
         return response

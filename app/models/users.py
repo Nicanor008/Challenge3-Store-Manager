@@ -1,12 +1,11 @@
-from app.models.db import DbSetup
-from instance.config import app_config
+
+from app.models.db import init_db
 
 users = []
 
 class UsersData():
-    def __init__(self,config_name):
-        self.db_init = DbSetup(config_name)
-        self.db = self.db_init.init_db() 
+    def __init__(self):
+        self.db = init_db()
         self.curr = self.db.cursor()
 
     def save(self, username, email, password, role):
@@ -24,7 +23,6 @@ class UsersData():
             return {"message":"User not found"}
 
         for user in user_data:
-            # email, password, role = user
             user = dict(
                 email = user_data[2],
                 employee_no = user_data[0],
@@ -53,8 +51,5 @@ class UsersData():
             else:
                 users.append(fetched_data)
         response = users
-        return response
-        
-
-        
+        return response   
          

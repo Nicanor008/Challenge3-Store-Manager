@@ -34,13 +34,13 @@ class Products(Resource):
         if check_product:
             return make_response(jsonify({"message":"product already exist"}), 409)
         elif not product_category:
-            return make_response(jsonify({"message":"Product category required"}),404)
+            return make_response(jsonify({"message":"Product category required"}),400)
         elif not product_quantity:
-            return make_response(jsonify({"message":"Product_quantity required"}),404)
+            return make_response(jsonify({"message":"Product_quantity required"}),400)
         elif not product_name:
-            return make_response(jsonify({"message":"Product name required"}),404)
+            return make_response(jsonify({"message":"Product name required"}),400)
         elif not price:
-            return make_response(jsonify({"message":"Price is a required field"}), 404)
+            return make_response(jsonify({"message":"Price is a required field"}), 400)
         
         else:
             self.user.add_product(product_category,product_name, product_quantity, price)
@@ -49,7 +49,6 @@ class Products(Resource):
     @jwt_required
     def get(self):
         """Fetch all products in database
-        
         """
         products = self.user.get_all_products()
         if not products:
@@ -73,7 +72,7 @@ class UpdateProduct(Resource):
         data = request.get_json()
 
         if not data:
-            return make_response(jsonify({"message":"fields cannot be empty"}),404)
+            return make_response(jsonify({"message":"fields cannot be empty"}),400)
 
         product_category = data.get("product_category")
         product_name = data.get("product_name")
@@ -81,9 +80,9 @@ class UpdateProduct(Resource):
         price = data.get("price") 
 
         if not product_category:
-            return make_response(jsonify({"message":"Product category cannot be empty"}), 404)
+            return make_response(jsonify({"message":"Product category cannot be empty"}), 400)
         elif not product_name:
-            return make_response(jsonify({"message":"Product Name required"}), 404)
+            return make_response(jsonify({"message":"Product Name required"}), 400)
         else:
             data = self.user.update_product(product_category, product_name, product_quantity, price, prodid)
             return make_response(jsonify({'message':'product successfully updated'}), 201)
@@ -105,22 +104,10 @@ class DeleteProduct(Resource):
         if claims['role'] != "admin":
             return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
 
-        # if product exists, delete, if not prompt a user
-        # if product already exists
         products = self.user.get_all_products()
         check_product = [product for product in products if product["productid"] == prodid]
         if not check_product:
             self.user.delete_product(prodid)
             return make_response(jsonify({'message':'product deleted'}), 200)
         else:
-            return make_response(jsonify({"message":"product does not exist"}), 404)
-
-# class GetSingleProduct(Resource):
-#     def __init__(self):
-#         self.user = ProductsData()
-
-#     @jwt_required
-#     def get(self, product_id):
-#         # get a single product. accessible to all users
-#         product = self.user.get_single_products(product_id)
-#         return {"Product":product}
+            return make_response(jsonify({"message":"product does not exist"}), 400)
