@@ -26,12 +26,12 @@ class Register(Resource, UsersData):
         username = data.get("username")
         email = data.get("email")
         password = data.get("password")
-        role = data.get("role")   
+        role = data.get("role")    
 
         # if user already exists
         user_exist = self.user.get_all_users()
         check_user = [user_search for user_search in user_exist if user_search['email'] == email]
-        print(check_user)
+
         if check_user:
             return make_response(jsonify({"message":"user already exist"}), 409)
 

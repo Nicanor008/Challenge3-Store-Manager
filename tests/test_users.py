@@ -1,4 +1,3 @@
-# import unittest 
 import json
 from base_test import BaseTest
 
@@ -9,7 +8,6 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps({
-                "employee_no":1234,
                 "username":"Nic",
                 "email":"nicki@nic.com",
                 "password":"nicki",
@@ -35,11 +33,12 @@ class TestRegister(BaseTest):
             content_type='application/json'
         )
         result = json.loads(response.data.decode('utf-8'))
+        print(result)
         self.assertEqual(result['message'], 'Invalid Email address')
         self.assertEqual(response.status_code, 400)
     
     # blank password
-    def test_incorrect_email(self):
+    def test_empty_password(self):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
@@ -56,7 +55,7 @@ class TestRegister(BaseTest):
         self.assertEqual(response.status_code, 400)
 
     # blank email address
-    def test_incorrect_password(self):
+    def test_blank_email(self):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(

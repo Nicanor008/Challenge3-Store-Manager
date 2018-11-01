@@ -1,7 +1,7 @@
 import json
 import unittest
 from app import create_app
-from app.models.db import init_db
+from app.models.db import drop_tables, create_tables
 
 
 class BaseTest(unittest.TestCase):
@@ -14,9 +14,25 @@ class BaseTest(unittest.TestCase):
         self.register = '/auth/signup'
         self.login = '/auth/login'
         self.products_url = '/products'
-        self.single_product_url = 'products/110'
+        self.single_product_url = '/products/110'
 
-            # admin login to post products
+        self.context = self.app.app_context()
+
+        with self.context:
+            create_tables()
+        
+        self.register_admin = self.client.post(
+            self.register,
+            data = json.dumps(dict(
+                username="nicki",
+                email="nic@nic.com",
+                password = "nicki",
+                role = "admin"
+            )),
+            content_type = 'application/json'
+        )
+
+    # admin login to post products
         self.login_admin = self.client.post(
             self.login,
             data = json.dumps(dict(
@@ -27,18 +43,7 @@ class BaseTest(unittest.TestCase):
         )
         result = json.loads(self.login_admin.data.decode('utf-8'))
         self.token_admin = result["token"]
-
-        self.login_attendant = self.client.post(
-            self.login,
-            data = json.dumps(dict(
-                email="nicki@nic.com",
-                password = "nicki"
-            )),
-            content_type = 'application/json'
-        )
-        attendant_result = json.loads(self.login_attendant.data.decode('utf-8'))
-        self.token_attendant = attendant_result["token"]
-
+    
         # product in stock
         self.products = {
             "productid" : 110,
@@ -58,3 +63,7 @@ class BaseTest(unittest.TestCase):
             "price" : 140000,
             "added_by" : 12
         }
+        
+
+    def tearDown(self):
+        drop_tables()

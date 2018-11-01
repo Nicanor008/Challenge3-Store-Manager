@@ -3,6 +3,19 @@ import json
 
 class TestProducts(BaseTest):
     def test_post_product(self):
+        self.client.post(
+            self.products_url,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
+            data=json.dumps(dict({
+                "productid" : 110,
+                "product_category" : "Smartphones",
+                "product_name" : "Samsung Galaxy S7",
+                "product_quantity" : 1,
+                "price" : 70000,
+                "added_by" : 12
+            })),
+            content_type='application/json'
+        )
         response = self.client.post(
             self.products_url,
             data=json.dumps(self.products),
@@ -40,12 +53,23 @@ class TestProducts(BaseTest):
 
     # get products
     def test_get_products(self):
+        self.client.post(
+            self.products_url,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
+            data=json.dumps(dict({
+                "product_category" : "Smartphones",
+                "product_name" : "Techno Spark",
+                "product_quantity" : 3,
+                "price" : 19000,
+                "added_by" : 12
+            })),
+            content_type='application/json'
+        )
         response = self.client.get(
             self.products_url,
             headers=dict(Authorization = "Bearer " + self.token_admin),
             content_type='application/json'
         )
-        json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200)
     
     
@@ -107,20 +131,3 @@ class TestProducts(BaseTest):
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'product successfully updated')
         self.assertEqual(response.status_code, 201)
-    
-    def test_attendant_to_modify_product(self):
-        response = self.client.put(
-            self.single_product_url,
-            headers = (dict(Authorization = 'Bearer ' + self.token_attendant )),
-            data=json.dumps(dict({
-                "product_category" : "Smartphones",
-                "product_name" : "Techno Boom",
-                "product_quantity" : 2,
-                "price" : 19000,
-                "added_by" : 12
-            })),
-            content_type='application/json'
-        )
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result['message'], 'Sorry, you don\'t have administrator rights')
-        self.assertEqual(response.status_code, 403)
