@@ -1,15 +1,17 @@
-from app.models.db import init_db
-from app.models.products import productsData
+from app.models.db import DbSetup
+from instance.config import app_config
+from app.models.products import ProductsData
 from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims, get_jwt_identity)
 
 
 sales_list = []
 
-class salesData():
-    def __init__(self):
-        self.db = init_db()                             
+class salesData(object):
+    def __init__(self,config_name):
+        self.db_init = DbSetup(config_name)
+        self.db = self.db_init.init_db()                            
         self.curr = self.db.cursor()
-        self.product = productsData()
+        # self.product = ProductsData()
     
     def post_sale(self, product_name, product_quantity, price):
         # get product id from products table
@@ -17,7 +19,7 @@ class salesData():
         product = self.curr.fetchone()
         product_id = product[0]
         category_id = product[1]
-        get_product_quantity = product[2]
+        existing_product_quantity = product[2]
 
         # get user attendant
         current_user = get_jwt_identity()
@@ -29,7 +31,7 @@ class salesData():
         self.db.commit()
 
         # update product quantity after sale
-        new_product_quantity = int(get_product_quantity) - int(product_quantity)
+        new_product_quantity = int(existing_product_quantity) - int(product_quantity)
         if new_product_quantity < 1:
             return {"message":"product out of stock"}
         print(new_product_quantity)

@@ -1,11 +1,13 @@
-from app.models.db import init_db
+from app.models.db import DbSetup
 from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
+from instance.config import app_config
 
 product_list = []
 
-class productsData():
-    def __init__(self):
-        self.db = init_db()                             
+class ProductsData(object):
+    def __init__(self, config_name):
+        self.db_init = DbSetup(config_name)
+        self.db = self.db_init.init_db()                             
         self.curr = self.db.cursor()
     
     def get_all_products(self):
@@ -15,17 +17,7 @@ class productsData():
         for i, items in enumerate(data):
             productid, category_id, product_name, product_quantity, price = items
 
-            # get product categories
-            # self.curr.execute("SELECT category_name FROM product_categories WHERE category_id=%s",(category_id,))
-            # data = self.curr.fetchone()
-            # product_category = category[0]
-            # print(product_category)
-            data = self.check_category()
-            print(data)
-            # for 
-            product_category = data[1]
-
-
+            
             fetched_data = dict(
                 productid = int(productid),
                 # product_category = product_category,
@@ -51,7 +43,7 @@ class productsData():
         self.curr.execute(query)
         data = self.curr.fetchall()
         categories = []
-        for i, items in enumerate(data):
+        for items in data:
             category_id, category_name = items
             fetched_categories = dict(
                 category_id=category_id,
@@ -66,14 +58,18 @@ class productsData():
         return self.db.commit()
 
 
-    def add_product(self,category_id, product_name, product_quantity,price):
+    def add_product(self,product_category, product_name, product_quantity,price):
         # check if product category exists
         category = self.check_category()
-        check_category = [product for product in category if product['category_id']==category_id]
-        if check_category:
+        check_category = [product for product in category if product["category_name"]==product_category]
+        if not check_category:
             self.add_category
-            
-        self.curr.execute("INSERT INTO products(category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", (category_id, product_name,product_quantity, price,))
+        
+        # self.curr.execute("SELECT * FROM product_categories WHERE category_name=%s",(product_category,))
+        # category_data = self.curr.fetchone()
+        # print(category_data)
+        # category_id = category_data[0]
+        self.curr.execute("INSERT INTO products(category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", ("null", product_name,product_quantity, price,))
         return self.db.commit()
     
     # update a product

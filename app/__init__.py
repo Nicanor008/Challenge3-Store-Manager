@@ -2,7 +2,7 @@ from flask import Flask, jsonify, Blueprint
 from flask_restful import Api
 from instance.config import app_config
 from flask_jwt_extended import JWTManager
-from app.models.db import create_tables
+from app.models.db import DbSetup
 from app.views.users import Register, Login, SingleUsers, All_Users
 from app.views.products import Products, UpdateProduct, DeleteProduct
 from app.models.users import users
@@ -12,11 +12,10 @@ from app.views.sales import Sales
 version2 = Blueprint('api', __name__, url_prefix='/')
 api = Api(version2)
 
-
-def create_app():
+def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object(app_config['development'])
-    create_tables()
+    app.config.from_object(app_config[config_name])
+    DbSetup(config_name).create_tables()
     
 
     # register the blueprint

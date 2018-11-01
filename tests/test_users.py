@@ -19,7 +19,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'user added successfully')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         # test wrong email address 
     def test_wrong_email(self):
@@ -36,7 +36,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Invalid Email address')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
     
     # blank password
     def test_incorrect_email(self):
@@ -53,7 +53,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Password field cannot be blank')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     # blank email address
     def test_incorrect_password(self):
@@ -70,7 +70,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Email cannot be blank')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
 
     def test_successful_Login(self):
@@ -98,7 +98,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'email required')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     # empty password on login
     def test_empty_password_onLogin(self):
@@ -112,5 +112,5 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'password required')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         

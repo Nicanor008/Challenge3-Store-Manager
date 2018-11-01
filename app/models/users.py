@@ -1,10 +1,12 @@
-from app.models.db import init_db
+from app.models.db import DbSetup
+from instance.config import app_config
 
 users = []
 
 class UsersData():
-    def __init__(self):
-        self.db = init_db()
+    def __init__(self,config_name):
+        self.db_init = DbSetup(config_name)
+        self.db = self.db_init.init_db() 
         self.curr = self.db.cursor()
 
     def save(self, username, email, password, role):
