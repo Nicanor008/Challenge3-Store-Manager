@@ -1,4 +1,3 @@
-# import unittest 
 import json
 from base_test import BaseTest
 
@@ -9,7 +8,6 @@ class TestRegister(BaseTest):
         response = self.client.post(
             self.register,
             data=json.dumps({
-                "employee_no":1234,
                 "username":"Nic",
                 "email":"nicki@nic.com",
                 "password":"nicki",
@@ -19,7 +17,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'user added successfully')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         # test wrong email address 
     def test_wrong_email(self):
@@ -35,11 +33,12 @@ class TestRegister(BaseTest):
             content_type='application/json'
         )
         result = json.loads(response.data.decode('utf-8'))
+        print(result)
         self.assertEqual(result['message'], 'Invalid Email address')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
     
     # blank password
-    def test_incorrect_email(self):
+    def test_empty_password(self):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
@@ -53,10 +52,10 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Password field cannot be blank')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     # blank email address
-    def test_incorrect_password(self):
+    def test_blank_email(self):
         response = self.client.post(
             self.register,
             data=json.dumps(dict(
@@ -70,7 +69,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Email cannot be blank')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
 
     def test_successful_Login(self):
@@ -98,7 +97,7 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'email required')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     # empty password on login
     def test_empty_password_onLogin(self):
@@ -112,5 +111,4 @@ class TestRegister(BaseTest):
         )
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'password required')
-        self.assertEqual(response.status_code, 200)
-        
+        self.assertEqual(response.status_code, 400)    

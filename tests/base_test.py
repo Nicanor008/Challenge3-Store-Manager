@@ -1,11 +1,12 @@
 import json
 import unittest
 from app import create_app
+from app.models.db import drop_tables, create_tables
 
 
 class BaseTest(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app()
+    def setUp(self, config_name):
+        self.app = create_app(config_name)
         self.app.testing = True
         self.client = self.app.test_client()
 
@@ -14,6 +15,22 @@ class BaseTest(unittest.TestCase):
         self.login = '/auth/login'
         self.products_url = '/products'
         self.single_product_url = '/products/110'
+
+        self.context = self.app.app_context()
+
+        with self.context:
+            create_tables()
+        
+        self.register_admin = self.client.post(
+            self.register,
+            data = json.dumps(dict(
+                username="nicki",
+                email="nic@nic.com",
+                password = "nicki",
+                role = "admin"
+            )),
+            content_type = 'application/json'
+        )
 
     # admin login to post products
         self.login_admin = self.client.post(
@@ -46,3 +63,7 @@ class BaseTest(unittest.TestCase):
             "price" : 140000,
             "added_by" : 12
         }
+        
+
+    def tearDown(self):
+        drop_tables()

@@ -6,18 +6,17 @@ from app.models.db import create_tables
 from app.views.users import Register, Login, SingleUsers, All_Users
 from app.views.products import Products, UpdateProduct, DeleteProduct
 from app.models.users import users
+from app.views.sales import Sales
 
 
 version2 = Blueprint('api', __name__, url_prefix='/')
 api = Api(version2)
 
-
-def create_app():
+def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config['development'])
     create_tables()
     
-
     # register the blueprint
     app.register_blueprint(version2)
 
@@ -28,6 +27,7 @@ def create_app():
     api.add_resource(DeleteProduct, 'products/<prodid>')
     api.add_resource(All_Users, 'auth/users')
     api.add_resource(SingleUsers, 'auth/users/<email>')
+    api.add_resource(Sales, 'sales')
 
 
     app.config['JWT_SECRET_KEY'] = 'thisismysecretkey'
