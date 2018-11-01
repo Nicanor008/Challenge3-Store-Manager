@@ -12,7 +12,7 @@ from app.views.sales import Sales
 version2 = Blueprint('api', __name__, url_prefix='/')
 api = Api(version2)
 
-def create_app():
+def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config['development'])
     create_tables()

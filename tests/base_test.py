@@ -5,8 +5,8 @@ from app.models.db import drop_tables, create_tables
 
 
 class BaseTest(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app()
+    def setUp(self, config_name):
+        self.app = create_app(config_name)
         self.app.testing = True
         self.client = self.app.test_client()
 
