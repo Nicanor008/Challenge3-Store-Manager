@@ -1,12 +1,12 @@
 import json
 import unittest
 from app import create_app
-from app.models.db import create_tables
+from app.models.db import DbSetup
 
 
 class BaseTest(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app()
+    def setUp(self, config_name):
+        self.app = create_app(config_name)
         self.app.testing = True
         self.client = self.app.test_client()
 
@@ -17,7 +17,7 @@ class BaseTest(unittest.TestCase):
         self.single_product_url = '/products/110'
 
         with self.app.app_context():
-            create_tables()
+            DbSetup(config_name).create_tables()
     
     def tearDown(self):
         # drop tables
