@@ -1,26 +1,41 @@
 language: python
-python:
-   - "3.6"
 
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-  - pip install coveralls
+python:    
 
-# Run tests
-script:
-   - nosetests --exe -v --with-coverage --cover-package=app
+ - "3.6"
 
-after_success:
-  - coveralls
+ 
 
 services:
-  - postgresql
-  
+
+  - postgres
+
+install:    
+
+ - pip install -r requirements.txt
+
+ - pip install codeclimate-test-reporter
+
+ 
+
 before_script:
-  - psql -c 'create database storemanager;' -U postgres
 
+  - psql -c "create database store;" -U postgres
   - psql -c "ALTER USER postgres WITH PASSWORD 'nic';" -U postgres
+script:    
 
-env:
-  - DATABASE_URL= "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
+ 
+
+- nosetests --with-coverage
+
+ - coveralls
+
+ 
+
+after_success:
+
+ - coveralls
+
+ - codeclimate-test-reporter
+
+cache: pip 
