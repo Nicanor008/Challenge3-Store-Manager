@@ -19,6 +19,7 @@ services:
   
 before_script:
   - psql -c 'create database storemanager;' -U postgres
+  - psql -c 'create database storemanager_testdb;' -U postgres
 
   - psql -c "ALTER USER postgres WITH PASSWORD 'nic';" -U postgres
 
