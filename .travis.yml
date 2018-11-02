@@ -23,4 +23,4 @@ before_script:
   - psql -c "ALTER USER postgres WITH PASSWORD 'nic';" -U postgres
 
 env:
-  - DATABASE_URL= "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
+  - TESTING_DATABASE_URL= "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
