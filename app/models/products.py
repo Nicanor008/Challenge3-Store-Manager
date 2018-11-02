@@ -12,8 +12,8 @@ class ProductsData():
     def get_all_products(self):
         self.curr.execute("SELECT * FROM products")
         data = self.curr.fetchall()
-        # product_list = []
-        for i,items in enumerate(data):
+        product_list = []
+        for i, items in enumerate(data):
             productid, category_id, product_name, product_quantity, price = items
 
             fetched_data = dict(
@@ -22,7 +22,11 @@ class ProductsData():
                 product_quantity = int(product_quantity),
                 price = price
             )
-            product_list.append(fetched_data)
+            product = [product for product in product_list if productid == product["productid"]]
+            if product:
+                response = product_list
+            else:
+                product_list.append(fetched_data)
         response = product_list
         return response
 

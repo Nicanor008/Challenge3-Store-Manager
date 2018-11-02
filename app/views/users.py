@@ -37,13 +37,13 @@ class Register(Resource, UsersData):
             return make_response(jsonify({"message":"user already exist"}))
         try:
             if not email:
-                response =  make_response(jsonify({"message":"Email cannot be blank"}), 400)
+                response =  make_response(jsonify({"message":"Email cannot be blank"}), 404)
             elif not password:
-                response =  make_response(jsonify({"message":"Password field cannot be blank"}), 400)
+                response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
             elif not username:
-                response =  make_response(jsonify({"message":"username field cannot be blank"}), 400)
+                response =  make_response(jsonify({"message":"username field cannot be blank"}), 404)
             elif not role:
-                response =  make_response(jsonify({"message":"role field cannot be blank"}), 400)
+                response =  make_response(jsonify({"message":"role field cannot be blank"}), 404)
             elif not re.match(email_format, email):
                 response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
             else:
@@ -73,9 +73,9 @@ class Login(Resource, UsersData):
         password =data["password"]
 
         if not email:
-            response = make_response(jsonify({"message":"email required"}), 400)
+            response = make_response(jsonify({"message":"email required"}), 404)
         elif not password:
-            response = make_response(jsonify({"message":"password required"}), 400)
+            response = make_response(jsonify({"message":"password required"}), 404)
         elif not re.match(email_format, email):
             response = make_response(jsonify({"message": "Invalid Email address"}), 406)
         else:
@@ -86,7 +86,7 @@ class Login(Resource, UsersData):
                 access_token = create_access_token(identity=user, expires_delta=expires)
                 response = jsonify({"token":access_token, "message":"Login successful"})
             else:
-                response =  jsonify({"Message":"wrong login credentials"})
+                response =  jsonify({"Message":"wrong login credentials"}, 401)
            
         return response
 
