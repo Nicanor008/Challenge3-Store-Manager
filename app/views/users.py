@@ -30,29 +30,29 @@ class Register(Resource, UsersData):
 
         # if user already exists
         user_exist = self.user.get_all_users()
-        check_user = [user_search for user_search in user_exist if user_search['email'] == email]
+        print(user_exist)
+        user = [user for user in user_exist if user['email'] == email]
+        print(user)
+        if user:
+            return make_response(jsonify({"message":"user already exist"}))
+        try:
+            if not email:
+                response =  make_response(jsonify({"message":"Email cannot be blank"}), 400)
+            elif not password:
+                response =  make_response(jsonify({"message":"Password field cannot be blank"}), 400)
+            elif not username:
+                response =  make_response(jsonify({"message":"username field cannot be blank"}), 400)
+            elif not role:
+                response =  make_response(jsonify({"message":"role field cannot be blank"}), 400)
+            elif not re.match(email_format, email):
+                response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
+            else:
+                self.user.save( username, email, password,role)
+                response = make_response(jsonify({'message':'user added successfully'}), 201)
 
-        if check_user:
-            return make_response(jsonify({"message":"user already exist"}), 409)
-
-        # fields should not be empty
-        if not data:
-            response =  make_response(jsonify({"message":"Fields cannot be empty"}), 400)
-        elif not email:
-            response =  make_response(jsonify({"message":"Email cannot be blank"}), 400)
-        elif not password:
-            response =  make_response(jsonify({"message":"Password field cannot be blank"}), 400)
-        elif not username:
-            response =  make_response(jsonify({"message":"username field cannot be blank"}), 400)
-        elif not role:
-            response =  make_response(jsonify({"message":"role field cannot be blank"}), 400)
-        elif not re.match(email_format, email):
-            response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
-        else:
-            self.user.save( username, email, password,role)
-            response = make_response(jsonify({'message':'user added successfully'}), 201)
-
-        return response
+            return response
+        except Exception:
+            return make_response(jsonify({"message":"user already exist"}))
 
 
 class Login(Resource, UsersData):
@@ -79,7 +79,7 @@ class Login(Resource, UsersData):
         elif not re.match(email_format, email):
             response = make_response(jsonify({"message": "Invalid Email address"}), 406)
         else:
-            current_user = self.user.login(email, password)            
+            current_user = self.user.login(email, password) 
             if current_user:
                 expires = datetime.timedelta(minutes=60)
                 user = self.user.get_user(email)

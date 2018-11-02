@@ -1,7 +1,7 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
-from app.models.products import ProductsData
+from app.models.products import ProductsData, product_list
 
 class Products(Resource):
     """Admin to add products to database
@@ -51,10 +51,13 @@ class Products(Resource):
         """Fetch all products in database
         """
         products = self.user.get_all_products()
-        if not products:
-            return make_response(jsonify({"message":"No products available"}),204)
-        
-        return make_response(jsonify({"products":products}),200)
+        # check_product = [product for product in products if product["product_name"]==product_name]
+        if products:
+            return make_response(jsonify({"products":products}),200)
+        else:
+            print("failed")
+            return make_response(jsonify({"message":"No products available"}))
+            # return make_response(jsonify({"message":"No products available"}),204)
 
 class UpdateProduct(Resource):
     def __init__(self):
