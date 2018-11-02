@@ -18,9 +18,9 @@ services:
   - postgresql
   
 before_script:
-  - psql -c 'create database storemanager_testdb;' -U postgres
+  - psql -c 'create database storemanager;' -U postgres
 
   - psql -c "ALTER USER postgres WITH PASSWORD 'nic';" -U postgres
 
 env:
-  - TESTING_DATABASE_URL= "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
+  - DATABASE_URL= "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
