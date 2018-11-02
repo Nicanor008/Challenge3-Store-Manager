@@ -36,6 +36,8 @@ or
 | POST /auth/login |  Logins in a user and generates a token |
 | GET /products |  Fetch all products |
 | POST /products |  Create a single product into products list |
+| DELETE /products/<productid> |  Delete a single product |
+| PUT /products/<productsid> |  update a single products |
 | GET /sales |  Fetch sale records |
 | POST /sales |  Add sale records |
 | GET /auth/users |  Fetch all users |
