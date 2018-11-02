@@ -1,12 +1,13 @@
 import psycopg2
 from instance.config import app_config
+import os
 
+enviroment = os.environ['ENV']
 
-url = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
-
+url = os.getenv('DATABASE_URL')
 def connection(url):
-    
-    con = psycopg2.connect(url)
+
+    con = psycopg2.connect(app_config[enviroment].DATABASE_URL)
     return con
 def init_db():
     con = connection(url)

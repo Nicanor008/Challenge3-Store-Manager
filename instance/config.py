@@ -6,8 +6,6 @@ class Config(object):
     """
     DEBUG = False
     DATABASE_URL = os.getenv('DATABASE_URL')
-    print(DATABASE_URL)
-
 
 class DevelopmentConfig(Config):
     """
@@ -15,7 +13,7 @@ class DevelopmentConfig(Config):
     """
     DEBUG = True
     DATABASE_URL = "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
-
+    os.environ["ENV"] ="development"
 
 class TestingConfig(Config):
     """
@@ -32,14 +30,12 @@ class StagingConfig(Config):
     """
     DEBUG = True
 
-
 class ProductionConfig(Config):
     """
         Configurations for Production.
     """
     DEBUG = False
     TESTING = False
-
 
 app_config = {
     'development': DevelopmentConfig,
