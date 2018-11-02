@@ -6,9 +6,7 @@ enviroment = os.environ['ENV']
 
 url = os.getenv('DATABASE_URL')
 def connection(url):
-    DATABASE_URL = os.environ['DATABASE_URL']
-    con = psycopg2.connect(DATABASE_URL, sslmode='require')
-    # con = psycopg2.connect(app_config[enviroment].DATABASE_URL)
+    con = psycopg2.connect(app_config[enviroment].DATABASE_URL)
     return con
 def init_db():
     con = connection(url)
