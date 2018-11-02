@@ -65,14 +65,14 @@ class ProductsData():
         return self.db.commit()
     
     # update a product
-    def update_product(self, product_category, product_name, product_quantity,price, prodid):
+    def update_product(self, product_category, product_name, product_quantity,price, product_id):
         """update an existing product model
         """
-        self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, prodid))
+        self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, product_id))
         return self.db.commit()
 
-    def delete_product(self, prodid):
+    def delete_product(self, product_id):
         """delete a product model
         """
-        self.curr.execute("DELETE FROM products WHERE product_id=%s", (prodid,))
+        self.curr.execute("DELETE FROM products WHERE product_id=%s", (product_id,))
         return self.db.commit()
