@@ -7,7 +7,7 @@ class TestProducts(BaseTest):
             self.products_url,
             headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             data=json.dumps(dict({
-                "productid" : 110,
+                "product_id" : 110,
                 "product_category" : "Smartphones",
                 "product_name" : "Samsung Galaxy S7",
                 "product_quantity" : 1,

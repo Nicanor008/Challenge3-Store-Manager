@@ -33,7 +33,6 @@ class TestRegister(BaseTest):
             content_type='application/json'
         )
         result = json.loads(response.data.decode('utf-8'))
-        print(result)
         self.assertEqual(result['message'], 'Invalid Email address')
         self.assertEqual(response.status_code, 400)
     

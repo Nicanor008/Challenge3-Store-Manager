@@ -46,7 +46,7 @@ class BaseTest(unittest.TestCase):
     
         # product in stock
         self.products = {
-            "productid" : 110,
+            "product_id" : 110,
             "product_category" : "Smartphones",
             "product_name" : "Samsung Galaxy S7",
             "product_quantity" : 1,
@@ -56,7 +56,7 @@ class BaseTest(unittest.TestCase):
 
         # product after modifing
         self.product_update = {
-            "productsid":12344,
+            "product_id":12344,
             "product_category" : "Smartphones",
             "product_name" : "Samsung Galaxy S7",
             "product_quantity" : 2,
