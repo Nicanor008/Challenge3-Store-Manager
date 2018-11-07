@@ -7,6 +7,7 @@ class TestRegister(BaseTest):
     def test_Register_user(self):
         response = self.client.post(
             self.register,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             data=json.dumps({
                 "username":"Nic",
                 "email":"nicki@nic.com",
@@ -23,6 +24,7 @@ class TestRegister(BaseTest):
     def test_wrong_email(self):
         response = self.client.post(
             self.register,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             data=json.dumps(dict(
                 employee_no=1234,
                 username="Nic",
@@ -40,6 +42,7 @@ class TestRegister(BaseTest):
     def test_empty_password(self):
         response = self.client.post(
             self.register,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             data=json.dumps(dict(
                 employee_no=12348,
                 username="Nic",
@@ -57,6 +60,7 @@ class TestRegister(BaseTest):
     def test_blank_email(self):
         response = self.client.post(
             self.register,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             data=json.dumps(dict(
                 employee_no=12346,
                 username="Nic",

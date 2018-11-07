@@ -39,8 +39,8 @@ class BaseTest(unittest.TestCase):
         self.login_admin = self.client.post(
             self.login,
             data = json.dumps(dict(
-                email="nic@nic.com",
-                password = "nicki"
+                email="nickip@gmail.com",
+                password = "nickip"
             )),
             content_type = 'application/json'
         )

@@ -67,4 +67,19 @@ def drop_tables():
     for query in queries:
         curr.execute(query)
     conn.commit()
+
+# create_admin = """INSERT INTO users""""
+
+def default_admin():
+    conn = connection(url)
+    curr = conn.cursor()
+    query = "SELECT * FROM users WHERE email=%s"
+    curr.execute(query, ('nickip@gmail.com',))
+    admin_result = curr.fetchone()
+    if not admin_result:
+        query = "INSERT INTO users(username, email, password,role)\
+            VALUES(%s,%s,%s,%s)"
+
+        curr.execute(query, ('nickip','nickip@gmail.com', 'nickip', 'admin'))
+        conn.commit()
     

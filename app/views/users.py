@@ -18,9 +18,14 @@ class Register(Resource, UsersData):
     def __init__(self):
         self.user = UsersData()
 
+    @jwt_required
     def post(self):
         """add a store attendant to the database
         """
+         # user must be an admin
+        claims = get_jwt_claims()
+        if claims['role'] != "admin":
+            return jsonify({"message": "Sorry, you don't have administrator rights"})
         data = request.get_json()
 
         username = data.get("username")
@@ -44,9 +49,8 @@ class Register(Resource, UsersData):
                 response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
             elif not username:
                 response =  make_response(jsonify({"message":"username field cannot be blank"}), 404)
-            # check_role = [role for role in role if role[]]
             elif not role in roles:
-                response =  make_response(jsonify({"message":"role field cannot be blank"}), 404)
+                response =  make_response(jsonify({"message":"Role can only be ADMIN or ATTENDANT"}), 404)
             elif not re.match(email_format, email):
                 response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
             else:
@@ -100,8 +104,6 @@ class SingleUsers(Resource):
     """  
     def __init__(self):
         self.user = UsersData()
-        self.db = init_db()
-        self.curr = self.db.cursor
 
     @jwt_required          
     def get(self, email):
@@ -120,8 +122,6 @@ class All_Users(Resource):
     """  
     def __init__(self):
         self.user = UsersData()
-        self.db = init_db()
-        self.curr = self.db.cursor
 
     @jwt_required     
     def get(self):

@@ -2,7 +2,7 @@ from flask import Flask, jsonify, Blueprint
 from flask_restful import Api
 from instance.config import app_config
 from flask_jwt_extended import JWTManager
-from app.models.db import create_tables
+from app.models.db import create_tables, default_admin
 from app.views.users import Register, Login, SingleUsers, All_Users
 from app.views.products import Products, UpdateProduct, DeleteProduct
 from app.models.users import users
@@ -16,6 +16,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config['development'])
     create_tables()
+    default_admin()
     
     # register the blueprint
     app.register_blueprint(version2)
