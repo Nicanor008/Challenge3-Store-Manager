@@ -16,6 +16,8 @@ class BaseTest(unittest.TestCase):
         self.products_url = '/products'
         self.single_product_url = '/products/110'
         self.sale_url = '/sales'
+        self.single_user = 'auth/users/nic@nic.com'
+        self.all_users = 'auth/users'
 
         self.context = self.app.app_context()
 

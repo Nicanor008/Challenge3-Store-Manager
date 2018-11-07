@@ -77,7 +77,7 @@ class Login(Resource, UsersData):
         elif not password:
             response = make_response(jsonify({"message":"password required"}), 404)
         elif not re.match(email_format, email):
-            response = make_response(jsonify({"message": "Invalid Email address"}), 406)
+            response = make_response(jsonify({"message": "Invalid Email address"}), 400)
         else:
             current_user = self.user.login(email, password) 
             if current_user:
@@ -105,10 +105,10 @@ class SingleUsers(Resource):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return jsonify({"message": "Sorry, you don't have administrator rights"})
+            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}), 403)
         
         response = self.user.get_user(email)
-        return jsonify({"Users":response})
+        return make_response(jsonify({"Users":response}),200)
 
 class All_Users(Resource):
     """fetch all users in database
