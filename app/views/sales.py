@@ -33,9 +33,9 @@ class Sales(Resource):
             return make_response(jsonify({"message":"Product quantity too high"}),413)
 
         if not product_name:
-            response = make_response(jsonify({"message":"product name required"}), 400)
+            response = make_response(jsonify({"message":"product name required"}), 404)
         elif not price:
-            response = make_response(jsonify({"message":"price required"}), 400)
+            response = make_response(jsonify({"message":"price required"}), 404)
         else:
             self.user.post_sale(product_name, product_quantity, price)
             response = make_response(jsonify({"message":"Sale record successfully added"}), 201)

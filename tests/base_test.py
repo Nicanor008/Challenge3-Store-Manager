@@ -15,6 +15,7 @@ class BaseTest(unittest.TestCase):
         self.login = '/auth/login'
         self.products_url = '/products'
         self.single_product_url = '/products/110'
+        self.sale_url = '/sales'
 
         self.context = self.app.app_context()
 
@@ -32,7 +33,7 @@ class BaseTest(unittest.TestCase):
             content_type = 'application/json'
         )
 
-    # admin login to post products
+
         self.login_admin = self.client.post(
             self.login,
             data = json.dumps(dict(
@@ -43,7 +44,31 @@ class BaseTest(unittest.TestCase):
         )
         result = json.loads(self.login_admin.data.decode('utf-8'))
         self.token_admin = result["token"]
-    
+
+
+        self.register_attendant = self.client.post(
+            self.register,
+            data = json.dumps(dict(
+                username="nicanor",
+                email="nicanor@nic.com",
+                password = "nicnic",
+                role = "attendant"
+            )),
+            content_type = 'application/json'
+        )
+
+    # attendant login to post products
+        self.login_attendant = self.client.post(
+            self.login,
+            data = json.dumps(dict(
+                email="nicanor@nic.com",
+                password = "nicnic"
+            )),
+            content_type = 'application/json'
+        )
+        result = json.loads(self.login_admin.data.decode('utf-8'))
+        self.token_attendant = result["token"]
+
         # product in stock
         self.products = {
             "product_id" : 110,
