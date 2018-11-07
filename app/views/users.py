@@ -26,7 +26,9 @@ class Register(Resource, UsersData):
         username = data.get("username")
         email = data.get("email")
         password = data.get("password")
-        role = data.get("role")    
+        role = data.get("role")   
+
+        roles = ['admin', 'attendant'] 
 
         # if user already exists
         user_exist = self.user.get_all_users()
@@ -42,7 +44,8 @@ class Register(Resource, UsersData):
                 response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
             elif not username:
                 response =  make_response(jsonify({"message":"username field cannot be blank"}), 404)
-            elif not role:
+            # check_role = [role for role in role if role[]]
+            elif not role in roles:
                 response =  make_response(jsonify({"message":"role field cannot be blank"}), 404)
             elif not re.match(email_format, email):
                 response = make_response(jsonify({"message": "Invalid Email address"}), 400)  
