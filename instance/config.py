@@ -12,7 +12,7 @@ class DevelopmentConfig(Config):
         Configurations for Development.
     """
     DEBUG = True
-    DATABASE_URL = "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
+    DATABASE_URL = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
     os.environ["ENV"] ="development"
 
 class TestingConfig(Config):
