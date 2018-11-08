@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, Blueprint
 from flask_restful import Api
+from flask_cors import CORS
 from instance.config import app_config
 from flask_jwt_extended import JWTManager
 from app.models.db import create_tables, default_admin
@@ -17,6 +18,7 @@ def create_app(config_name):
     app.config.from_object(app_config['development'])
     create_tables()
     default_admin()
+    CORS(app)
     
     # register the blueprint
     app.register_blueprint(version2)
