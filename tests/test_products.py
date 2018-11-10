@@ -3,6 +3,7 @@ import json
 
 class TestProducts(BaseTest):
     def test_post_product(self):
+
         self.client.post(
             self.products_url,
             headers = (dict(Authorization = 'Bearer ' + self.token_admin)),

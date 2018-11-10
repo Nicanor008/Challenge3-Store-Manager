@@ -51,3 +51,17 @@ class Sales(Resource):
             return make_response(jsonify({"message":"No sale records"}))
             
         return make_response(jsonify({"Sales":sales}), 200)
+
+class DeleteSale(Resource):
+    def __init__(self):
+        self.user = salesData()
+
+    @jwt_required
+    def delete(self, sales_id):
+        sales = self.user.get_all_sales_records()
+        check_product = [sale for sale in sales if sale["sales_id"] == sales_id]
+        if not check_product:
+            self.user.delete_sale(sales_id)
+            return make_response(jsonify({'message':'sale deleted'}), 200)
+        else:
+            return make_response(jsonify({"message":"sale does not exist"}), 404)

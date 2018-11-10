@@ -6,14 +6,15 @@ class Config(object):
     """
     DEBUG = False
     DATABASE_URL = os.getenv('DATABASE_URL')
-
+    # DATABASE_URL = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
 class DevelopmentConfig(Config):
     """
         Configurations for Development.
     """
     DEBUG = True
+    os.environ['ENV'] = 'development'
     DATABASE_URL = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
-    os.environ["ENV"] ="development"
+    # os.environ["ENV"] ="development"
 
 class TestingConfig(Config):
     """
@@ -21,25 +22,10 @@ class TestingConfig(Config):
     """
     TESTING = True
     DEBUG = True
-    TESTING_DATABASE_URL = "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
-    # DATABASE_URL = os.getenv('DATABASE_TEST')
-
-class StagingConfig(Config):
-    """
-        Configurations for Staging.
-    """
-    DEBUG = True
-
-class ProductionConfig(Config):
-    """
-        Configurations for Production.
-    """
-    DEBUG = False
-    TESTING = False
-
+    # os.environ['ENV'] = 'testing'
+    DATABASE_URL = "dbname='storemanager_testdb' host='localhost' port='5432' user='postgres' password='nic'"
+   
 app_config = {
     'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'staging': StagingConfig,
-    'production': ProductionConfig,
+    'testing': TestingConfig
 }

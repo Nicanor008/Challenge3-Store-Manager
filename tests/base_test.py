@@ -1,12 +1,14 @@
 import json
 import unittest
 from app import create_app
+from instance.config import app_config
 from app.models.db import drop_tables, create_tables
 
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app('testing')
+        self.app = create_app(config_name='testing')
+        self.app.config.from_object(app_config['testing'])   
         self.app.testing = True
         self.client = self.app.test_client()
 
@@ -28,7 +30,7 @@ class BaseTest(unittest.TestCase):
             self.register,
             data = json.dumps(dict(
                 username="nicki",
-                email="nic@nic.com",
+                email="nickip@gmail.com",
                 password = "nicki",
                 role = "admin"
             )),
@@ -44,8 +46,8 @@ class BaseTest(unittest.TestCase):
             )),
             content_type = 'application/json'
         )
-        result = json.loads(self.login_admin.data.decode('utf-8'))
-        self.token_admin = result["token"]
+        result = json.loads(self.login_admin.data)
+        self.token_admin = result['token']
 
 
         self.register_attendant = self.client.post(

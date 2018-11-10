@@ -91,7 +91,7 @@ class Login(Resource, UsersData):
                 expires = datetime.timedelta(minutes=60)
                 user = self.user.get_user(email)
                 access_token = create_access_token(identity=user, expires_delta=expires)
-                response = jsonify({"token":access_token, "message":"Login successful"}, 200)
+                response = jsonify({"token":access_token, "message":"Login successful"})
             else:
                 response =  jsonify({"Message":"wrong login credentials"}, 401)
            

@@ -41,19 +41,28 @@ class salesData():
 
               # get products
             self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
-            product = self.curr.fetchone()
-            product_name = product[0]
-
+            product_name = self.curr.fetchone()
+            
             # get user who sold product
             attended_by = get_jwt_identity()
 
             fetched_data = dict(
+                sales_id = sales_id,
                 product_id = product_id,
-                product_name = product_name,
+                product_name = product_name[0],
                 sold_quantity = sold_quantity,
                 price = price,
                 attended_by = attended_by
             )
-            sales_list.append(fetched_data)
+            user = [user for user in sales_list if sales_id == user["sales_id"]]
+            if user:
+                response = sales_list
+            else:
+                sales_list.append(fetched_data)
         response = sales_list
         return response
+
+
+    def delete_sale(self, sales_id):
+        self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
+        return self.db.commit()
