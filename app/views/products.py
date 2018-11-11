@@ -51,12 +51,10 @@ class Products(Resource):
         """Fetch all products in database
         """
         products = self.user.get_all_products()
-        # check_product = [product for product in products if product["product_name"]==product_name]
         if products:
             return make_response(jsonify({"products":products}),200)
         else:
             return make_response(jsonify({"message":"No products available"}))
-            # return make_response(jsonify({"message":"No products available"}),204)
 
 class UpdateProduct(Resource):
     def __init__(self):
@@ -111,5 +109,23 @@ class DeleteProduct(Resource):
         if not check_product:
             self.user.delete_product(prodid)
             return make_response(jsonify({'message':'product deleted'}), 200)
+        else:
+            return make_response(jsonify({"message":"product does not exist"}), 404)
+
+# get individual product
+class GetSingleProduct(Resource):
+    def __init__(self):
+        self.user = ProductsData()
+
+    @jwt_required
+    def get(self, product_id):
+        claims = get_jwt_claims()
+        if claims['role'] != "admin":
+            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
+        products = self.user.get_all_products()
+        check_product = [product for product in products if product["productid"] == product_id]
+        if not check_product:
+            product = self.user.get_single_product(product_id)
+            return make_response(jsonify({'message':product}), 200)
         else:
             return make_response(jsonify({"message":"product does not exist"}), 404)

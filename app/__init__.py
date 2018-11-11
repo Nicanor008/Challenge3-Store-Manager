@@ -5,7 +5,7 @@ from instance.config import app_config
 from flask_jwt_extended import JWTManager
 from app.models.db import create_tables, default_admin
 from app.views.users import Register, Login, SingleUsers, All_Users
-from app.views.products import Products, UpdateProduct, DeleteProduct
+from app.views.products import Products, UpdateProduct, DeleteProduct, GetSingleProduct
 from app.models.users import users
 from app.views.sales import Sales, DeleteSale
 
@@ -28,6 +28,7 @@ def create_app(config_name='development'):
     api.add_resource(Products, 'products')
     api.add_resource(UpdateProduct, 'products/<prodid>')
     api.add_resource(DeleteProduct, 'products/<prodid>')
+    api.add_resource(GetSingleProduct, 'products/<product_id>')
     api.add_resource(All_Users, 'auth/users')
     api.add_resource(SingleUsers, 'auth/users/<email>')
     api.add_resource(Sales, 'sales')

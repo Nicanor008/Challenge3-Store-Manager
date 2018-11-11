@@ -76,3 +76,19 @@ class ProductsData():
         """
         self.curr.execute("DELETE FROM products WHERE product_id=%s", (product_id,))
         return self.db.commit()
+
+    def get_single_product(self, product_id):
+        self.curr.execute("SELECT * FROM products WHERE product_id=%s", (product_id,))
+        data = self.curr.fetchone()
+        print(data)
+        # product_id = data[0]
+        # return ("produ":product_id);
+
+        fetched_data = dict(productid= data[0],
+                product_name =data[2],
+                product_price =data[4],
+                product_quantity = int(data[3])
+                # product_quantity = int(product_quantity),
+                # price = price
+            )
+        return fetched_data
