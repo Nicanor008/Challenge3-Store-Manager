@@ -61,7 +61,7 @@ class UpdateProduct(Resource):
         self.user = ProductsData()
 
     @jwt_required   
-    def put(self, prodid):
+    def put(self, product_id):
         """updates a single requested product in a database
         """
          # user must be an admin
@@ -84,7 +84,7 @@ class UpdateProduct(Resource):
         elif not product_name:
             return make_response(jsonify({"message":"Product Name required"}), 404)
         else:
-            data = self.user.update_product(product_category, product_name, product_quantity, price, prodid)
+            data = self.user.update_product(product_category, product_name, product_quantity, price, product_id)
             return make_response(jsonify({'message':'product successfully updated'}), 201)
 
             
@@ -98,16 +98,16 @@ class DeleteProduct(Resource):
         self.user = ProductsData()
 
     @jwt_required
-    def delete(self, prodid):
+    def delete(self, product_id):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
             return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
 
         products = self.user.get_all_products()
-        check_product = [product for product in products if product["productid"] == prodid]
+        check_product = [product for product in products if product["productid"] == product_id]
         if not check_product:
-            self.user.delete_product(prodid)
+            self.user.delete_product(product_id)
             return make_response(jsonify({'message':'product deleted'}), 200)
         else:
             return make_response(jsonify({"message":"product does not exist"}), 404)
@@ -119,9 +119,6 @@ class GetSingleProduct(Resource):
 
     @jwt_required
     def get(self, product_id):
-        claims = get_jwt_claims()
-        if claims['role'] != "admin":
-            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
         products = self.user.get_all_products()
         check_product = [product for product in products if product["productid"] == product_id]
         if not check_product:
