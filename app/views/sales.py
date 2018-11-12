@@ -47,8 +47,8 @@ class Sales(Resource):
         sales = self.user.get_all_sales_records()
         if not sales:
             return make_response(jsonify({"message":"No sale records"}))
-            
-        return make_response(jsonify({"Sales":sales}), 200)
+        else:
+            return make_response(jsonify({"Sales":sales}), 200)
 
 class DeleteSale(Resource):
     def __init__(self):
