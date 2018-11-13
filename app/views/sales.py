@@ -27,10 +27,12 @@ class Sales(Resource):
         
         # check quantity
         products = self.products.get_all_products()
-        check_quantity = [product for product in products if int(product["product_quantity"]) > product_quantity]
-        print(check_quantity)
+        check_quantity = [product for product in products if int(product["product_quantity"]) >= product_quantity]
+        # less_quantity = [product for product in products if product_quantity == 0)]
         if not check_quantity:
             return make_response(jsonify({"message":"Product quantity too high"}),413)
+        elif product_quantity == 0:
+            return make_response(jsonify({"message":"Quantity cannot be zero"}))
         elif not product_name:
             return make_response(jsonify({"message":"product name required"}), 404)
         elif not price:

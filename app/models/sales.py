@@ -51,7 +51,7 @@ class salesData():
             fetched_data = dict(
                 sales_id = sales_id,
                 product_id = product_id,
-                product_name = product_name[0],
+                product_name = product_name,
                 sold_quantity = sold_quantity,
                 price = price,
                 attended_by = attended_by
