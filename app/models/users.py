@@ -13,9 +13,8 @@ class UsersData():
         return self.db.commit()
 
     def login(self, email, password):
-        self.curr.execute("SELECT * FROM users WHERE email=(%s) AND password=(%s)",(email, password,))
-        result = self.curr.fetchone()
-        role = result[4]
+        self.curr.execute("SELECT role FROM users WHERE email=(%s) AND password=(%s)",(email, password,))
+        role = self.curr.fetchone()
         return role
 
     

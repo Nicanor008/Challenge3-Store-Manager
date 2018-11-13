@@ -19,9 +19,11 @@ class salesData():
 
         # get user attendant
         current_user = get_jwt_identity()
-        self.curr.execute("SELECT * FROM users WHERE email=%s",(current_user,))
-        user = self.curr.fetchone()
-        employee_no = user[0]
+        self.curr.execute("SELECT employee_no FROM users WHERE email=%s",(current_user,))
+        employee_no = self.curr.fetchone()
+        print(employee_no)
+        print(current_user)
+        # employee_no = user[0]
 
         self.curr.execute("INSERT INTO sales (category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
         self.db.commit()
