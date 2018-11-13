@@ -81,6 +81,9 @@ class ProductsData():
         self.curr.execute("SELECT * FROM products WHERE product_id=%s", (product_id,))
         data = self.curr.fetchone()
 
+        if not data:
+            return {"message":"Product Not Available"}, 400
+
         fetched_data = dict(productid= data[0],
                 product_name =data[2],
                 product_price =data[4],

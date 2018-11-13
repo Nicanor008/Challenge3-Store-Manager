@@ -27,12 +27,14 @@ class Sales(Resource):
         
         # check quantity
         products = self.products.get_all_products()
-        check_quantity = [product for product in products if int(product["product_quantity"]) >= product_quantity]
-        # less_quantity = [product for product in products if product_quantity == 0)]
+        check_quantity = [product for product in products if int(product["product_quantity"]) > product_quantity]
+        zero_quantity = [product for product in products if product_quantity == 0]
         if not check_quantity:
             return make_response(jsonify({"message":"Product quantity too high"}),413)
+        elif zero_quantity:
+            return make_response(jsonify({"message":"Product out of stock"}))
         elif product_quantity == 0:
-            return make_response(jsonify({"message":"Quantity cannot be zero"}))
+            return make_response(jsonify({"message":"Quantity to be sold cannot be zero"}))
         elif not product_name:
             return make_response(jsonify({"message":"product name required"}), 404)
         elif not price:
@@ -65,3 +67,18 @@ class DeleteSale(Resource):
             return make_response(jsonify({'message':'sale deleted'}), 200)
         else:
             return make_response(jsonify({"message":"sale does not exist"}), 404)
+
+# get individual sale record
+class GetSingleSale(Resource):
+    def __init__(self):
+        self.user = salesData()
+
+    @jwt_required
+    def get(self, sales_id):
+        sales = self.user.get_all_sales_records()
+        check_sale = [product for product in sales if product["sales_id"] == sales_id]
+        if sales == '':
+            return make_response(jsonify({"message":"product does not exist"}), 404)
+        else:
+            sale = self.user.get_single_sale(sales_id)
+            return make_response(jsonify({'message':sale}), 200)

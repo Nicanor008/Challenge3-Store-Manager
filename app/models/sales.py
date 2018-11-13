@@ -21,9 +21,6 @@ class salesData():
         current_user = get_jwt_identity()
         self.curr.execute("SELECT employee_no FROM users WHERE email=%s",(current_user,))
         employee_no = self.curr.fetchone()
-        print(employee_no)
-        print(current_user)
-        # employee_no = user[0]
 
         self.curr.execute("INSERT INTO sales (category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
         self.db.commit()
@@ -59,11 +56,33 @@ class salesData():
             user = [user for user in sales_list if sales_id == user["sales_id"]]
             if user:
                 response = sales_list
+            elif not product_name:
+                response = sales_list
             else:
                 sales_list.append(fetched_data)
         response = sales_list
         return response
 
+    def get_single_sale(self, sales_id):
+        self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sales_id,))
+        data = self.curr.fetchone()
+
+        if not data:
+            return {"message":"Sale Not Available"}, 400
+
+        product_id = data[0]
+
+        # get product name
+        self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
+        product_name = self.curr.fetchone()
+
+        fetched_data = dict(
+                productid= data[0],
+                product_name = product_name,
+                product_price =data[4],
+                product_quantity = int(data[3])
+            )
+        return fetched_data
 
     def delete_sale(self, sales_id):
         self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
