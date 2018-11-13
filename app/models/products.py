@@ -82,7 +82,7 @@ class ProductsData():
         data = self.curr.fetchone()
 
         if not data:
-            return {"message":"Product Not Available"}, 400
+            return {"message":"Product Not Available"}, 404
 
         fetched_data = dict(productid= data[0],
                 product_name =data[2],

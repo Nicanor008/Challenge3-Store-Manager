@@ -68,20 +68,25 @@ class salesData():
         data = self.curr.fetchone()
 
         if not data:
-            return {"message":"Sale Not Available"}, 400
+            return {"message":"Sale Not Available"}, 404
 
-        product_id = data[0]
+        product_id = data[2]
 
         # get product name
         self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
         product_name = self.curr.fetchone()
 
+        # get user attendant
+        current_user = get_jwt_identity()
+
         fetched_data = dict(
-                productid= data[0],
+                product_id= data[2],
                 product_name = product_name,
                 product_price =data[4],
-                product_quantity = int(data[3])
+                product_quantity = int(data[3]),
+                attended_by = current_user
             )
+        print(data)
         return fetched_data
 
     def delete_sale(self, sales_id):
