@@ -55,4 +55,10 @@ def create_app(config_name='development'):
             'message': 'The token has expired'
         }), 401
 
+    @jwt.invalid_token_loader
+    def invalid_token_callback(token):
+        return jsonify({
+            'message': 'Token Authorization failed, Make sure you have the correct token on login'
+        }), 401
+
     return app

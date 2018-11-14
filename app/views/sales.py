@@ -1,6 +1,6 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
-from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
+from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
 from app.models.sales import salesData, sales_list
 from app.models.products import ProductsData
 
@@ -18,6 +18,11 @@ class Sales(Resource):
         product_name = data.get('product_name')
         product_quantity = data.get('product_quantity')
         price = data.get('price')
+
+         # user must be an attendant
+        claims = get_jwt_claims()
+        if claims['role'] != "attendant":
+            return make_response(jsonify({"message": "Sorry, you must be a Store Attendant"}), 403)
 
         # check if product exists
         products = self.products.get_all_products()
