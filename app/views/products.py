@@ -43,8 +43,8 @@ class Products(Resource):
             return make_response(jsonify({"message":"Price is a required field"}), 404)
         
         else:
-            self.user.add_product(product_category,product_name, product_quantity, price)
-            return make_response(jsonify({'message':'product added successfully'}),201)
+            add_product = self.user.add_product(product_category,product_name, product_quantity, price)
+            return add_product
     
     @jwt_required
     def get(self):
@@ -85,9 +85,7 @@ class UpdateProduct(Resource):
             return make_response(jsonify({"message":"Product Name required"}), 404)
         else:
             data = self.user.update_product(product_category, product_name, product_quantity, price, product_id)
-            return make_response(jsonify({'message':'product successfully updated'}), 201)
-
-            
+            return data            
 
 class DeleteProduct(Resource):
     """delete a product in a database
@@ -99,18 +97,8 @@ class DeleteProduct(Resource):
 
     @jwt_required
     def delete(self, product_id):
-         # user must be an admin
-        claims = get_jwt_claims()
-        if claims['role'] != "admin":
-            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
-
-        products = self.user.get_all_products()
-        check_product = [product for product in products if product["productid"] == product_id]
-        if not check_product:
-            self.user.delete_product(product_id)
-            return make_response(jsonify({'message':'product deleted'}), 200)
-        else:
-            return make_response(jsonify({"message":"product does not exist"}), 404)
+        delete_product = self.user.delete_product(product_id)
+        return delete_product
 
 # get individual product
 class GetSingleProduct(Resource):
@@ -123,6 +111,6 @@ class GetSingleProduct(Resource):
         check_product = [product for product in products if product["productid"] == product_id]
         if not check_product:
             product = self.user.get_single_product(product_id)
-            return make_response(jsonify({'message':product}), 200)
+            return product
         else:
             return make_response(jsonify({"message":"product does not exist"}), 404)

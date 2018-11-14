@@ -1,3 +1,4 @@
+from flask import request, jsonify, make_response
 from app.models.db import init_db
 from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
 from instance.config import app_config
@@ -19,7 +20,7 @@ class ProductsData():
             fetched_data = dict(
                 productid = int(productid),
                 product_name = product_name,
-                product_quantity = int(product_quantity),
+                product_quantity = product_quantity,
                 price = price
             )
             product = [product for product in product_list if productid == product["productid"]]
@@ -56,37 +57,75 @@ class ProductsData():
 
     def add_product(self,product_category, product_name, product_quantity,price):
         # check if product category exists
-        category = self.check_category()
-        check_category = [product for product in category if product["category_name"]==product_category]
-        if not check_category:
-            self.add_category
-        
-        self.curr.execute("INSERT INTO products (category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", ("null", product_name,product_quantity, price,))
-        return self.db.commit()
+        try:
+            isinstance(int(price), int)
+            isinstance(int(product_quantity), int)
+            category = self.check_category()
+            check_category = [product for product in category if product["category_name"]==product_category]
+            if not check_category:
+                self.add_category
+            
+            self.curr.execute("INSERT INTO products (category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", ("null", product_name,product_quantity, price,))
+            self.db.commit()
+            return {'message':'product added successfully'}
+        except ValueError:
+            response = {'message':'Product Quantity and price should only be an integer'}
+            return response
+
     
     # update a product
     def update_product(self, product_category, product_name, product_quantity,price, product_id):
         """update an existing product model
         """
-        self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, product_id))
-        return self.db.commit()
+        try:
+            isinstance(int(product_id), int)
+            products = self.get_all_products()
+            check_product = [product for product in products if int(product["productid"])==int(product_id)]
+            
+            if not check_product:
+                return {"message":"Product does not exist"}
+            else:
+                self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, product_id))
+                self.db.commit()
+                return {'message':'Product Updated successfully'}
+        except ValueError:
+            response = {'message':'Product ID should only be an integer'}
+            return response
+
 
     def delete_product(self, product_id):
         """delete a product model
         """
-        self.curr.execute("DELETE FROM products WHERE product_id=%s", (product_id,))
-        return self.db.commit()
+        try:
+            isinstance(int(product_id), int)
+            products = self.get_all_products()
+            check_product = [product for product in products if int(product["productid"])==int(product_id)]
+            if not check_product:
+                return {"message":"Product does not exist"}
+            else:
+                self.curr.execute("DELETE FROM products WHERE product_id=%s", (product_id,))
+                self.db.commit()
+                return {'message':'Product deleted successfully'}                
+        except ValueError:
+            response = {'message':'Product ID should only be an integer'}
+            return response
 
     def get_single_product(self, product_id):
-        self.curr.execute("SELECT * FROM products WHERE product_id=%s", (product_id,))
-        data = self.curr.fetchone()
+        try:
+            isinstance(int(product_id), int)
+            self.curr.execute("SELECT * FROM products WHERE product_id=%s", (product_id,))
+            data = self.curr.fetchone()
 
-        if not data:
-            return {"message":"Product Not Available"}, 404
+            if not data:
+                return {"message":"Product Not Available"},404
 
-        fetched_data = dict(productid= data[0],
-                product_name =data[2],
-                product_price =data[4],
-                product_quantity = int(data[3])
-            )
-        return fetched_data
+            fetched_data = dict(
+                    productid= data[0],
+                    product_name =data[2],
+                    product_price =data[4],
+                    product_quantity = int(data[3])
+                )
+            return fetched_data
+        except ValueError:
+            response = {'message':'Sales ID should only be an integer'}
+            return response

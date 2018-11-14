@@ -64,31 +64,55 @@ class salesData():
         return response
 
     def get_single_sale(self, sales_id):
-        self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sales_id,))
-        data = self.curr.fetchone()
+        try:
+            isinstance(int(sales_id), int)
+            self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sales_id,))
+            data = self.curr.fetchone()
 
-        if not data:
-            return {"message":"Sale Not Available"}, 404
+            if not data:
+                return {"message":"Sale Record Not Available"}, 404
 
-        product_id = data[2]
+            product_id = data[2]
 
-        # get product name
-        self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
-        product_name = self.curr.fetchone()
+            # get product name
+            self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
+            product_name = self.curr.fetchone()
 
-        # get user attendant
-        current_user = get_jwt_identity()
+            # get user attendant
+            current_user = get_jwt_identity()
 
-        fetched_data = dict(
-                product_id= data[2],
-                product_name = product_name,
-                product_price =data[4],
-                product_quantity = int(data[3]),
-                attended_by = current_user
-            )
-        print(data)
-        return fetched_data
+            fetched_data = dict(
+                    sales_id=data[0],
+                    product_id= data[2],
+                    product_name = product_name,
+                    product_price =data[4],
+                    product_quantity = int(data[3]),
+                    attended_by = current_user
+                )
+            return fetched_data
+        except ValueError:
+            response = {'message':'Sales ID should be an integer'}
+            return response
 
     def delete_sale(self, sales_id):
-        self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
-        return self.db.commit()
+        try:
+            isinstance(int(sales_id), int)
+            sales = self.get_all_sales_records()
+            print(sales)
+            # sales = get_all_sales_records(self)
+            check_sale = [product for product in sales if product["sales_id"] == sales_id]
+            # check_sale = [sale for sale in sales if sales_id == sale["sales_id"]]
+            print(check_sale)
+            if not check_sale:
+                return {"message":"product not available"}
+            else:
+                self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
+                data = self.db.commit()
+                
+                # if data != True:
+                #     return {"message":"Sale Record Not Available"}, 404
+                
+                return {"message":"Sale Record Deleted"}, 200
+        except ValueError:
+            response = {'message':'Sales ID should only be an integer'}
+            return response
