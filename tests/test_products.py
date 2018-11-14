@@ -115,6 +115,18 @@ class TestProducts(BaseTest):
     
     def test_modify_product(self):
         # add a product first then delete it
+        self.client.post(
+            self.products_url,
+            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
+            data=json.dumps(dict({
+                "product_category" : "Smartphones",
+                "product_name" : "Techno Spark",
+                "product_quantity" : 3,
+                "price" : 19000,
+                "added_by" : 12
+            })),
+            content_type='application/json'
+        )
         response = self.client.put(
             self.single_product_url,
             headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
@@ -127,6 +139,4 @@ class TestProducts(BaseTest):
             })),
             content_type='application/json'
         )
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result['message'], 'product successfully updated')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
