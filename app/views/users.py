@@ -37,14 +37,16 @@ class Register(Resource, UsersData):
 
         # if user already exists
         user_exist = self.user.get_all_users()
-        print(user_exist)
         user = [user for user in user_exist if user['email'] == email]
-        print(user)
         if user:
             return make_response(jsonify({"message":"user already exist"}))
         try:
             if not email:
                 response =  make_response(jsonify({"message":"Email cannot be blank"}), 404)
+            elif re.search(r"\s", username):
+                return {"message":"Username cannot be a whitespace"}
+            elif re.search(r"\s", password):
+                return {"message":"password cannot be a whitespace"}
             elif not password:
                 response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
             elif not username:
@@ -66,12 +68,9 @@ class Login(Resource, UsersData):
 
     def __init__(self):
         self.user = UsersData()
-        self.db = init_db()
-        self.curr = self.db.cursor
 
     def post(self):
         """login users
-        
         users should be already registered 
         """
         data = request.get_json()
@@ -81,6 +80,10 @@ class Login(Resource, UsersData):
 
         if not email:
             response = make_response(jsonify({"message":"email required"}), 404)
+        elif re.search(r"\s", email):
+            return make_response(jsonify({"message":"email cannot be a whitespace"}), 400)
+        elif re.search(r"\s", password):
+            return make_response(jsonify({"message":"password cannot be a whitespace"}), 400)
         elif not password:
             response = make_response(jsonify({"message":"password required"}), 404)
         elif not re.match(email_format, email):
