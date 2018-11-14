@@ -27,8 +27,8 @@ class Sales(Resource):
         
         # check quantity
         products = self.products.get_all_products()
-        check_quantity = [product for product in products if int(product["product_quantity"]) > product_quantity]
-        zero_quantity = [product for product in products if int(product["product_quantity"]) == 0]
+        check_quantity = [product for product in products if product["product_quantity"] > product_quantity]
+        zero_quantity = [product for product in products if product["product_quantity"] == 0]
         if not check_quantity:
             return make_response(jsonify({"message":"Product quantity too high"}),413)
         elif zero_quantity:
@@ -40,8 +40,8 @@ class Sales(Resource):
         elif not price:
             return make_response(jsonify({"message":"price required"}), 404)
         else:
-            self.user.post_sale(product_name, product_quantity, price)
-            return make_response(jsonify({"message":"Sale record successfully added"}), 201)
+            sale = self.user.post_sale(product_name, product_quantity, price)
+            return sale
     
     @jwt_required
     def get(self):

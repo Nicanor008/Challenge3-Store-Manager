@@ -12,25 +12,31 @@ class salesData():
         self.curr = self.db.cursor()
     
     def post_sale(self, product_name, product_quantity, price):
-        self.curr.execute("SELECT product_id, category_id, product_quantity FROM products WHERE product_name=%s",(product_name,))
-        product = self.curr.fetchone()
-        product_id = product[0]
-        existing_product_quantity = product[2]
+        try:
+            isinstance(int(price), int)
+            isinstance(int(product_quantity), int)
+            self.curr.execute("SELECT product_id, category_id, product_quantity FROM products WHERE product_name=%s",(product_name,))
+            product = self.curr.fetchone()
+            product_id = product[0]
+            existing_product_quantity = product[2]
 
-        # get user attendant
-        current_user = get_jwt_identity()
-        self.curr.execute("SELECT employee_no FROM users WHERE email=%s",(current_user,))
-        employee_no = self.curr.fetchone()
+            # get user attendant
+            current_user = get_jwt_identity()
+            self.curr.execute("SELECT employee_no FROM users WHERE email=%s",(current_user,))
+            employee_no = self.curr.fetchone()
 
-        self.curr.execute("INSERT INTO sales (category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
-        self.db.commit()
+            self.curr.execute("INSERT INTO sales (category_id,product_id, product_quantity, price, attended_by) VALUES(%s, %s,  %s,  %s, %s)", (1, product_id, product_quantity, price,employee_no,))
+            self.db.commit()
 
-        # update product quantity after sale
-        new_product_quantity = int(existing_product_quantity) - int(product_quantity)
-        if new_product_quantity < 0:
-            return {"message":"product out of stock"}
-        self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
-        return self.db.commit()
+            # update product quantity after sale
+            new_product_quantity = int(existing_product_quantity) - int(product_quantity)
+            if new_product_quantity < 0:
+                return {"message":"product out of stock"}
+            self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
+            return self.db.commit()
+        except ValueError:
+            response = {'message':'Product Quantity and Price should only be an integer'}
+            return response
 
     def get_all_sales_records(self):
         self.curr.execute("SELECT * FROM sales")
