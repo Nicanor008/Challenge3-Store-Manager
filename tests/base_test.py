@@ -16,7 +16,7 @@ class BaseTest(unittest.TestCase):
         self.register = '/auth/signup'
         self.login = '/auth/login'
         self.products_url = '/products'
-        self.single_product_url = '/products/110'
+        self.single_product_url = '/products/1'
         self.sale_url = '/sales'
         self.single_user = 'auth/users/nic@nic.com'
         self.all_users = 'auth/users'

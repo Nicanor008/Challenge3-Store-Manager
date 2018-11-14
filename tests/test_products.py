@@ -47,8 +47,6 @@ class TestProducts(BaseTest):
             headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             content_type='application/json'
         )
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result['message'], 'product deleted')
         self.assertEqual(response.status_code, 200)
     
 
