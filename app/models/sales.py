@@ -33,7 +33,8 @@ class salesData():
             if new_product_quantity < 0:
                 return {"message":"product out of stock"}
             self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
-            return self.db.commit()
+            self.db.commit()
+            return {'message':'Product Updated Successfully'}
         except ValueError:
             response = {'message':'Product Quantity and Price should only be an integer'}
             return response
@@ -104,20 +105,12 @@ class salesData():
         try:
             isinstance(int(sales_id), int)
             sales = self.get_all_sales_records()
-            print(sales)
-            # sales = get_all_sales_records(self)
-            check_sale = [product for product in sales if product["sales_id"] == sales_id]
-            # check_sale = [sale for sale in sales if sales_id == sale["sales_id"]]
-            print(check_sale)
-            if not check_sale:
-                return {"message":"product not available"}
+            check_product = [product for product in sales if int(product["sales_id"])==int(sales_id)]
+            if not check_product:
+                return {"message":"Sale Record does not exist"}
             else:
                 self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
-                data = self.db.commit()
-                
-                # if data != True:
-                #     return {"message":"Sale Record Not Available"}, 404
-                
+                self.db.commit()
                 return {"message":"Sale Record Deleted"}, 200
         except ValueError:
             response = {'message':'Sales ID should only be an integer'}

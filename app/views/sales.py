@@ -1,8 +1,9 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
-from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
+from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims, get_jwt_identity)
 from app.models.sales import salesData, sales_list
 from app.models.products import ProductsData
+from app.models.db import init_db
 
 class Sales(Resource):
     """Store attendant to add sale record to database. Also can get a sale record from database that he/she posted
@@ -10,6 +11,8 @@ class Sales(Resource):
     def __init__(self):
         self.user = salesData()
         self.products = ProductsData()
+        self.db = init_db()
+        self.curr = self.db.cursor()
 
     @jwt_required
     def post(self):
@@ -66,7 +69,7 @@ class DeleteSale(Resource):
     @jwt_required
     def delete(self, sales_id):
         delete_sale = self.user.delete_sale(sales_id)
-        return jsonify({'message':delete_sale})
+        return delete_sale
 
 # get individual sale record
 class GetSingleSale(Resource):
@@ -76,4 +79,4 @@ class GetSingleSale(Resource):
     @jwt_required
     def get(self, sales_id):     
         sale = self.user.get_single_sale(sales_id)
-        return make_response(jsonify({'message':sale}))
+        return sale

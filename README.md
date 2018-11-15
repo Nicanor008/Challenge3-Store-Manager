@@ -33,13 +33,16 @@ or
 | API Endpoint | Functionality |
 | -----------  | ------------- |
 | POST /auth/signup |  Register a new user |
-| POST /auth/login |  Logins in a user and generates a token |
+| POST /auth/login |  Login a user and generates a token |
 | GET /products |  Fetch all products |
 | POST /products |  Create a single product into products list |
+| GET /products/<product_id> | Fetch a single product
 | DELETE /products/<productid> |  Delete a single product |
 | PUT /products/<productsid> |  update a single products |
 | GET /sales |  Fetch sale records |
+| GET /sales/<sales_id> | Fetch a single sale |
 | POST /sales |  Add sale records |
+| DELETE /sales/<sales_id> | Delete a single sale |
 | GET /auth/users |  Fetch all users |
 | GET /auth/users/<email> |  Get a single user |
 
