@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/Nicanor008/Challenge3-Store-Manager.svg?branch=develop)](https://travis-ci.com/Nicanor008/Challenge3-Store-Manager)
-[![Coverage Status](https://coveralls.io/repos/github/Nicanor008/Challenge3-Store-Manager/badge.svg?branch=ft-feedback-161661479)](https://coveralls.io/github/Nicanor008/Challenge3-Store-Manager?branch=ft-feedback-161661479)
+[![Coverage Status](https://coveralls.io/repos/github/Nicanor008/Challenge3-Store-Manager/badge.svg?branch=develop)](https://coveralls.io/github/Nicanor008/Challenge3-Store-Manager?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2ae2f909c47dbe872ff6/maintainability)](https://codeclimate.com/github/Nicanor008/Challenge3-Store-Manager/maintainability)
 
 
