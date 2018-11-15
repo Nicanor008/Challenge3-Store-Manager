@@ -7,7 +7,7 @@ from app.models.db import create_tables, default_admin
 from app.views.users import Register, Login, SingleUsers, All_Users
 from app.views.products import Products, UpdateProduct, DeleteProduct, GetSingleProduct
 from app.models.users import users
-from app.views.sales import Sales, DeleteSale, GetSingleSale
+from app.views.sales import Sales, DeleteSale, GetSingleSale, AdminGetSingleSale
 
 
 version2 = Blueprint('api', __name__, url_prefix='/')
@@ -34,6 +34,7 @@ def create_app(config_name='development'):
     api.add_resource(Sales, 'sales')
     api.add_resource(DeleteSale, 'sales/<sales_id>')
     api.add_resource(GetSingleSale, 'sales/<sales_id>')
+    api.add_resource(AdminGetSingleSale, 'auth/sales/<sale_id>')
 
 
     app.config['JWT_SECRET_KEY'] = 'thisismysecretkey'

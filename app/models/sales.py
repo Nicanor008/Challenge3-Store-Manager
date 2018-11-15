@@ -34,7 +34,7 @@ class salesData():
                 return {"message":"product out of stock"}
             self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
             self.db.commit()
-            return {'message':'Product Updated Successfully'}
+            return {'message':'Sale record posted Successfully'}
         except ValueError:
             response = {'message':'Product Quantity and Price should only be an integer'}
             return response
@@ -73,7 +73,11 @@ class salesData():
     def get_single_sale(self, sales_id):
         try:
             isinstance(int(sales_id), int)
-            self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sales_id,))
+            attended_by = get_jwt_identity()
+
+            self.curr.execute("SELECT employee_no FROM users WHERE email=%s", (attended_by,))
+            current_user = self.curr.fetchone()
+            self.curr.execute("SELECT * FROM sales WHERE sales_id=%s and attended_by=%s", (sales_id,current_user))
             data = self.curr.fetchone()
 
             if not data:
@@ -100,6 +104,42 @@ class salesData():
         except ValueError:
             response = {'message':'Sales ID should be an integer'}
             return response
+        
+    def admin_get_single_sale(self, sale_id):
+        try:
+            isinstance(int(sale_id), int)
+            claims = get_jwt_claims()
+            if claims['role'] != "admin":
+                return {"message": "Sorry, you must be an administrator"}
+
+            self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sale_id,))
+            data = self.curr.fetchone()
+
+            if not data:
+                return {"message":"Sale Record Not Available"}, 404
+
+            product_id = data[2]
+
+            # get product name
+            self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
+            product_name = self.curr.fetchone()
+
+            # get user attendant
+            current_user = get_jwt_identity()
+
+            fetched_data = dict(
+                    sales_id=data[0],
+                    product_id= data[2],
+                    product_name = product_name,
+                    product_price =data[4],
+                    product_quantity = int(data[3]),
+                    attended_by = current_user
+                )
+            return fetched_data
+        except ValueError:
+            response = {'message':'Sales ID should be an integer'}
+            return response
+
 
     def delete_sale(self, sales_id):
         try:

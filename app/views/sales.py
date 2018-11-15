@@ -80,3 +80,17 @@ class GetSingleSale(Resource):
     def get(self, sales_id):     
         sale = self.user.get_single_sale(sales_id)
         return sale
+
+# get individual sale record
+class AdminGetSingleSale(Resource):
+    def __init__(self):
+        self.user = salesData()
+
+    @jwt_required
+    def get(self, sale_id):     
+        sale = self.user.admin_get_single_sale(sale_id)
+        return sale
+
+class UpdateSale(Resource):
+    def __init__(self):
+        self.user = salesData()
