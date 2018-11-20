@@ -24,7 +24,7 @@ class Sales(Resource):
 
          # user must be an attendant
         claims = get_jwt_claims()
-        if claims['role'] != "attendant":
+        if claims['role'] == "admin":
             return make_response(jsonify({"message": "Sorry, you must be a Store Attendant"}), 403)
 
         # check if product exists
@@ -57,11 +57,19 @@ class Sales(Resource):
         Accessible to only admins
         """
         sales = self.user.get_all_sales_records()
-        if not sales:
-            return make_response(jsonify({"message":"No sale records"}))
-        else:
-            return make_response(jsonify({"Sales":sales}), 200)
+        return sales
 
+class AdminGetSales(Resource):
+    def __init__(self):
+        self.user = salesData()
+
+    @jwt_required
+    def get(self):
+        """fetch all sale records
+        Accessible to only admins
+        """
+        sales = self.user.admin_get_all_sales_records()
+        return sales
 class DeleteSale(Resource):
     def __init__(self):
         self.user = salesData()

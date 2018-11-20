@@ -40,8 +40,57 @@ class salesData():
             return response
 
     def get_all_sales_records(self):
+        claims = get_jwt_claims()
+        if claims['role'] != "attendant":
+            return {"message": "Sorry, you must be an attendant"}
+
+        attended_by = get_jwt_identity()
+        self.curr.execute("SELECT employee_no FROM users WHERE email=%s", (attended_by,))
+        current_user = self.curr.fetchone()
+
+        self.curr.execute("SELECT * FROM sales WHERE attended_by=%s", (current_user,))
+        data = self.curr.fetchall()
+        if not data:
+            return {"message":"No sale records"}
+
+        for i, items in enumerate(data):
+            sales_id, category_id, product_id, sold_quantity, price, attended_by = items
+
+              # get products
+            self.curr.execute("SELECT product_name FROM products WHERE product_id=%s",(product_id,))
+            product_name = self.curr.fetchone()
+            
+            # get user who sold product
+            attended_by = get_jwt_identity()
+
+            fetched_data = dict(
+                sales_id = sales_id,
+                product_id = product_id,
+                product_name = product_name,
+                sold_quantity = sold_quantity,
+                price = price,
+                attended_by = attended_by
+            )
+            user = [user for user in sales_list if sales_id == user["sales_id"]]
+            if user:
+                response = sales_list
+            elif not product_name:
+                response = sales_list
+            else:
+                sales_list.append(fetched_data)
+        response = sales_list
+        return response
+
+    def admin_get_all_sales_records(self):
+        claims = get_jwt_claims()
+        if claims['role'] != "admin":
+            return {"message": "Sorry, you must be an administrator"}
+
         self.curr.execute("SELECT * FROM sales")
         data = self.curr.fetchall()
+        if not data:
+            return {"message":"No sale records"}
+
         for i, items in enumerate(data):
             sales_id, category_id, product_id, sold_quantity, price, attended_by = items
 
@@ -145,7 +194,7 @@ class salesData():
         try:
             isinstance(int(sales_id), int)
             sales = self.get_all_sales_records()
-            check_product = [product for product in sales if int(product["sales_id"])==int(sales_id)]
+            check_product = [product for product in sales if product["sales_id"]==sales_id]
             if not check_product:
                 return {"message":"Sale Record does not exist"}
             else:
