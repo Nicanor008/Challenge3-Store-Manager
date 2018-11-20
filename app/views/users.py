@@ -9,8 +9,6 @@ from app.models.db import init_db
 # The required format of an email-address
 email_format = r"(^[a-zA-z0-9_.]+@[a-zA-z0-9-]+\.[a-z]+$)"       
 
-# user = UsersData()
-
 class Register(Resource, UsersData):
     """Admin to register users
         Returns jsonify users data accordingly
@@ -63,7 +61,6 @@ class Register(Resource, UsersData):
         except Exception:
             return make_response(jsonify({"message":"user already exist"}))
 
-
 class Login(Resource, UsersData):
 
     def __init__(self):
@@ -102,7 +99,6 @@ class Login(Resource, UsersData):
 
 class SingleUsers(Resource):
     """fetch single user in database using email
-
     Only accessible to admin
     """  
     def __init__(self):
@@ -120,7 +116,6 @@ class SingleUsers(Resource):
 
 class All_Users(Resource):
     """fetch all users in database
-    
     only accessible to admin
     """  
     def __init__(self):

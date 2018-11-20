@@ -84,7 +84,6 @@ class TestRegister(BaseTest):
             )),
             content_type = 'application/json'
         )
-        result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200)
     
     # empty email on login

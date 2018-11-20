@@ -47,9 +47,7 @@ class TestProducts(BaseTest):
             headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, 200)
-        # pass
-    
+        self.assertEqual(response.status_code, 200)    
 
     # get products
     def test_get_products(self):
@@ -71,7 +69,6 @@ class TestProducts(BaseTest):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
-    
     
     def test_post_empty_category(self):
         response = self.client.post(

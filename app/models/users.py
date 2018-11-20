@@ -16,7 +16,6 @@ class UsersData():
         self.curr.execute("SELECT role FROM users WHERE email=(%s) AND password=(%s)",(email, password,))
         role = self.curr.fetchone()
         return role
-
     
     def get_user(self, email):
         self.curr.execute("SELECT * FROM users WHERE email=%s", (email,))

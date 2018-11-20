@@ -72,7 +72,6 @@ class ProductsData():
             response = {'message':'Product Quantity and price should only be an integer'}
             return response
 
-    
     # update a product
     def update_product(self, product_category, product_name, product_quantity,price, product_id):
         """update an existing product model
@@ -91,7 +90,6 @@ class ProductsData():
         except ValueError:
             response = {'message':'Product ID should only be an integer'}
             return response
-
 
     def delete_product(self, product_id):
         """delete a product model

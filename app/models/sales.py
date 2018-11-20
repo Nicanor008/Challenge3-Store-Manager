@@ -189,7 +189,6 @@ class salesData():
             response = {'message':'Sales ID should be an integer'}
             return response
 
-
     def delete_sale(self, sales_id):
         try:
             isinstance(int(sales_id), int)
