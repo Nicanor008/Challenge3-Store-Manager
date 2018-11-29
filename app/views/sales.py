@@ -70,12 +70,6 @@ class Sale_SingleProduct(Resource):
         if claims['role'] != "attendant":
             return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}), 403)
         
-        # check if product exists
-        products = self.products.get_all_products()
-        product = [product for product in products if product_id == product["productid"]]
-        if not product:
-            return make_response(jsonify({"message":"product does not exist"}), 404)
-        
         sale_product = self.user.sale_single_product(product_id)
         return sale_product
 
