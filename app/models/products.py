@@ -82,13 +82,13 @@ class ProductsData():
             check_product = [product for product in products if int(product["productid"])==int(product_id)]
             
             if not check_product:
-                return {"message":"Product does not exist"}
+                return {"message":"Product does not exist"}, 404
             else:
                 self.curr.execute("UPDATE products SET product_name=%s, product_quantity=%s, price=%s WHERE product_id=%s", (product_name, product_quantity, price, product_id))
                 self.db.commit()
-                return {'message':'Product Updated successfully'}
+                return {'message':'Product Updated successfully'}, 201
         except ValueError:
-            response = {'message':'Product ID should only be an integer'}
+            response = {'message':'Product ID should only be an integer'}, 406
             return response
 
     def delete_product(self, product_id):
@@ -103,9 +103,9 @@ class ProductsData():
             else:
                 self.curr.execute("DELETE FROM products WHERE product_id=%s", (product_id,))
                 self.db.commit()
-                return {'message':'Product deleted successfully'}                
+                return {'message':'Product deleted successfully'}, 200               
         except ValueError:
-            response = {'message':'Product ID should only be an integer'}
+            response = {'message':'Product ID should only be an integer'}, 406
             return response
 
     def get_single_product(self, product_id):
@@ -125,5 +125,5 @@ class ProductsData():
                 )
             return fetched_data
         except ValueError:
-            response = {'message':'Sales ID should only be an integer'}
+            response = {'message':'Sales ID should only be an integer'}, 406
             return response

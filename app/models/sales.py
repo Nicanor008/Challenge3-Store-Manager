@@ -31,18 +31,18 @@ class salesData():
             # update product quantity after sale
             new_product_quantity = int(existing_product_quantity) - int(product_quantity)
             if new_product_quantity < 0:
-                return {"message":"product out of stock"}
+                return {"message":"product out of stock"}, 413
             self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
             self.db.commit()
-            return {'message':'Sale record posted Successfully'}
+            return {'message':'Sale record posted Successfully'}, 201
         except ValueError:
-            response = {'message':'Product Quantity and Price should only be an integer'}
+            response = {'message':'Product Quantity and Price should only be an integer'}, 406
             return response
 
     def get_all_sales_records(self):
         claims = get_jwt_claims()
         if claims['role'] != "attendant":
-            return {"message": "Sorry, you must be an attendant"}
+            return {"message": "Sorry, you must be an attendant"}, 403
 
         attended_by = get_jwt_identity()
         self.curr.execute("SELECT employee_no FROM users WHERE email=%s", (attended_by,))
@@ -51,7 +51,7 @@ class salesData():
         self.curr.execute("SELECT * FROM sales WHERE attended_by=%s", (current_user,))
         data = self.curr.fetchall()
         if not data:
-            return {"message":"No sale records"}
+            return {"message":"No sale records"}, 404
 
         for i, items in enumerate(data):
             sales_id, category_id, product_id, sold_quantity, price, attended_by = items
@@ -84,12 +84,12 @@ class salesData():
     def admin_get_all_sales_records(self):
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return {"message": "Sorry, you must be an administrator"}
+            return {"message": "Sorry, you must be an administrator"}, 403
 
         self.curr.execute("SELECT * FROM sales")
         data = self.curr.fetchall()
         if not data:
-            return {"message":"No sale records"}
+            return {"message":"No sale records"}, 404
 
         for i, items in enumerate(data):
             sales_id, category_id, product_id, sold_quantity, price, attended_by = items
@@ -151,7 +151,7 @@ class salesData():
                 )
             return fetched_data
         except ValueError:
-            response = {'message':'Sales ID should be an integer'}
+            response = {'message':'Sales ID should be an integer'}, 406
             return response
         
     def admin_get_single_sale(self, sale_id):
@@ -159,7 +159,7 @@ class salesData():
             isinstance(int(sale_id), int)
             claims = get_jwt_claims()
             if claims['role'] != "admin":
-                return {"message": "Sorry, you must be an administrator"}
+                return {"message": "Sorry, you must be an administrator"}, 403
 
             self.curr.execute("SELECT * FROM sales WHERE sales_id=%s", (sale_id,))
             data = self.curr.fetchone()
@@ -186,7 +186,7 @@ class salesData():
                 )
             return fetched_data
         except ValueError:
-            response = {'message':'Sales ID should be an integer'}
+            response = {'message':'Sales ID should be an integer'}, 406
             return response
 
     def delete_sale(self, sales_id):
@@ -195,13 +195,13 @@ class salesData():
             sales = self.get_all_sales_records()
             check_product = [product for product in sales if product["sales_id"]==sales_id]
             if not check_product:
-                return {"message":"Sale Record does not exist"}
+                return {"message":"Sale Record does not exist"}, 404
             else:
                 self.curr.execute("DELETE FROM sales WHERE sales_id=%s", (sales_id,))
                 self.db.commit()
                 return {"message":"Sale Record Deleted"}, 200
         except ValueError:
-            response = {'message':'Sales ID should only be an integer'}
+            response = {'message':'Sales ID should only be an integer'}, 406
             return response
 
     # sale single products using ID
@@ -228,7 +228,7 @@ class salesData():
                 return {"message":"product out of stock"}
             self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
             self.db.commit()
-            return {'message':'Sale record posted Successfully'}
+            return {'message':'Sale record posted Successfully'}, 201
         except ValueError:
-            response = {'message':'Product ID should only be an integer'}
+            response = {'message':'Product ID should only be an integer'}, 406
             return response

@@ -34,10 +34,6 @@ class Products(Resource):
         check_product = [product for product in product_exist if product["product_name"]==product_name]
         if check_product:
             return make_response(jsonify({"message":"product already exist"}), 409)
-        # elif re.search(r"\s", product_quantity):
-        #     return make_response(jsonify({"message":"product Quantity cannot be a whitespace"}),404)
-        # elif re.search(r"\s", price):
-        #     return make_response(jsonify({"message":"price cannot be a whitespace"}),404)
         elif not product_category:
             return make_response(jsonify({"message":"Product category required"}),404)
         elif not product_quantity:
@@ -59,7 +55,7 @@ class Products(Resource):
         if products:
             return make_response(jsonify({"products":products}),200)
         else:
-            return make_response(jsonify({"message":"No products available"}))
+            return make_response(jsonify({"message":"No products available"}), 204)
 
 class UpdateProduct(Resource):
     def __init__(self):

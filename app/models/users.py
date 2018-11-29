@@ -21,7 +21,7 @@ class UsersData():
         self.curr.execute("SELECT * FROM users WHERE email=%s", (email,))
         user_data = self.curr.fetchone()
         if not user_data:
-            return {"message":"User not found"}
+            return {"message":"User not found"}, 404
 
         for user in user_data:
             user = dict(

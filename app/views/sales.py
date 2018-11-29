@@ -71,10 +71,10 @@ class Sale_SingleProduct(Resource):
             return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}), 403)
         
         # check if product exists
-        # products = self.products.get_all_products()
-        # product = [product for product in products if product_id == product["product_id"]]
-        # if not product:
-        #     return make_response(jsonify({"message":"product does not exist"}), 400)
+        products = self.products.get_all_products()
+        product = [product for product in products if product_id == product["productid"]]
+        if not product:
+            return make_response(jsonify({"message":"product does not exist"}), 404)
         
         sale_product = self.user.sale_single_product(product_id)
         return sale_product

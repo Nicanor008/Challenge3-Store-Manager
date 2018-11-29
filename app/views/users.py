@@ -23,7 +23,7 @@ class Register(Resource, UsersData):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return jsonify({"message": "Sorry, you don't have administrator rights"})
+            return {"message": "Sorry, you don't have administrator rights"}, 403
         data = request.get_json()
 
         username = data.get("username")
@@ -59,7 +59,7 @@ class Register(Resource, UsersData):
 
             return response
         except Exception:
-            return make_response(jsonify({"message":"user already exist"}))
+            return make_response(jsonify({"message":"user already exist"}), 409)
 
 class Login(Resource, UsersData):
 
@@ -126,6 +126,6 @@ class All_Users(Resource):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return jsonify({"message": "Sorry, you don't have administrator rights"})
+            return {"message": "Sorry, you don't have administrator rights"}, 403
         response = self.user.get_all_users()
         return response
