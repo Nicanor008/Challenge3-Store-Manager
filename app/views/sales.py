@@ -59,6 +59,26 @@ class Sales(Resource):
         sales = self.user.get_all_sales_records()
         return sales
 
+class Sale_SingleProduct(Resource):
+    def __init__(self):
+        self.user = salesData()
+        self.products = ProductsData()
+    
+    @jwt_required
+    def post(self, product_id):
+        claims = get_jwt_claims()
+        if claims['role'] != "attendant":
+            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}), 403)
+        
+        # check if product exists
+        # products = self.products.get_all_products()
+        # product = [product for product in products if product_id == product["product_id"]]
+        # if not product:
+        #     return make_response(jsonify({"message":"product does not exist"}), 400)
+        
+        sale_product = self.user.sale_single_product(product_id)
+        return sale_product
+
 class AdminGetSales(Resource):
     def __init__(self):
         self.user = salesData()
