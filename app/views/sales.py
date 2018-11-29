@@ -57,7 +57,10 @@ class Sales(Resource):
         Accessible to only admins
         """
         sales = self.user.get_all_sales_records()
-        return sales
+        if sales == []:
+            return {"message":"No Products available at the moment"}, 204
+        else:
+            return sales
 
 class Sale_SingleProduct(Resource):
     def __init__(self):

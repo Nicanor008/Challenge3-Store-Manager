@@ -225,7 +225,7 @@ class salesData():
             # update product quantity after sale
             new_product_quantity = int(existing_product_quantity) - 1
             if new_product_quantity < 0:
-                return {"message":"product out of stock"}
+                return {"message":"product out of stock"}, 413
             self.curr.execute("UPDATE products SET product_quantity=%s WHERE product_id=%s",(new_product_quantity, product_id,))
             self.db.commit()
             return {'message':'Sale record posted Successfully'}, 201
