@@ -93,7 +93,7 @@ class Login(Resource, UsersData):
                 access_token = create_access_token(identity=user, expires_delta=expires)
                 response = jsonify({"token":access_token, "message":"Login successful", "role":current_user})
             else:
-                response =  jsonify({"Message":"wrong login credentials"}, 401)
+                response =  {"Message":"wrong login credentials"}, 401
            
         return response
 
