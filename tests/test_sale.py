@@ -30,7 +30,7 @@ class TestSale(BaseTest):
     def test_get_sale(self):
         response = self.client.get( 
             self.sale_url,
-            headers = (dict(Authorization = 'Bearer ' + self.token_admin)),
+            headers = (dict(Authorization = 'Bearer ' + self.token_attendant)),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
