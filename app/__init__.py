@@ -5,9 +5,9 @@ from instance.config import app_config
 from flask_jwt_extended import JWTManager
 from app.models.db import create_tables, default_admin
 from app.views.users import Register, Login, SingleUsers, All_Users
-from app.views.products import Products, UpdateProduct, DeleteProduct
+from app.views.products import Products, UpdateProduct, DeleteProduct, GetSingleProduct
 from app.models.users import users
-from app.views.sales import Sales, DeleteSale
+from app.views.sales import Sales, DeleteSale, GetSingleSale, AdminGetSingleSale, AdminGetSales, Sale_SingleProduct
 
 
 version2 = Blueprint('api', __name__, url_prefix='/')
@@ -20,18 +20,23 @@ def create_app(config_name='development'):
     default_admin()
     CORS(app)
     
-    # register the blueprint
+    # register the blueprintg
     app.register_blueprint(version2)
 
     api.add_resource(Register, 'auth/signup')
     api.add_resource(Login, 'auth/login')
     api.add_resource(Products, 'products')
-    api.add_resource(UpdateProduct, 'products/<prodid>')
-    api.add_resource(DeleteProduct, 'products/<prodid>')
+    api.add_resource(UpdateProduct, 'products/<product_id>')
+    api.add_resource(DeleteProduct, 'products/<product_id>')
+    api.add_resource(GetSingleProduct, 'products/<product_id>')
     api.add_resource(All_Users, 'auth/users')
     api.add_resource(SingleUsers, 'auth/users/<email>')
     api.add_resource(Sales, 'sales')
     api.add_resource(DeleteSale, 'sales/<sales_id>')
+    api.add_resource(GetSingleSale, 'sales/<sales_id>')
+    api.add_resource(AdminGetSingleSale, 'auth/sales/<sale_id>')
+    api.add_resource(AdminGetSales, 'auth/sales')
+    api.add_resource(Sale_SingleProduct, 'sale/<product_id>')
 
 
     app.config['JWT_SECRET_KEY'] = 'thisismysecretkey'
@@ -51,6 +56,12 @@ def create_app(config_name='development'):
     def my_expired_token_callback():
         return jsonify({
             'message': 'The token has expired'
+        }), 401
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(token):
+        return jsonify({
+            'message': 'Token Authorization failed, Make sure you have the correct token on login'
         }), 401
 
     return app

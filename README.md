@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/Nicanor008/Challenge3-Store-Manager.svg?branch=develop)](https://travis-ci.com/Nicanor008/Challenge3-Store-Manager)
-[![Coverage Status](https://coveralls.io/repos/github/Nicanor008/Challenge3-Store-Manager/badge.svg?branch=ft-feedback-161661479)](https://coveralls.io/github/Nicanor008/Challenge3-Store-Manager?branch=ft-feedback-161661479)
+[![Coverage Status](https://coveralls.io/repos/github/Nicanor008/Challenge3-Store-Manager/badge.svg?branch=develop)](https://coveralls.io/github/Nicanor008/Challenge3-Store-Manager?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2ae2f909c47dbe872ff6/maintainability)](https://codeclimate.com/github/Nicanor008/Challenge3-Store-Manager/maintainability)
 
 
@@ -33,13 +33,16 @@ or
 | API Endpoint | Functionality |
 | -----------  | ------------- |
 | POST /auth/signup |  Register a new user |
-| POST /auth/login |  Logins in a user and generates a token |
+| POST /auth/login |  Login a user and generates a token |
 | GET /products |  Fetch all products |
 | POST /products |  Create a single product into products list |
+| GET /products/<product_id> | Fetch a single product
 | DELETE /products/<productid> |  Delete a single product |
 | PUT /products/<productsid> |  update a single products |
 | GET /sales |  Fetch sale records |
+| GET /sales/<sales_id> | Fetch a single sale |
 | POST /sales |  Add sale records |
+| DELETE /sales/<sales_id> | Delete a single sale |
 | GET /auth/users |  Fetch all users |
 | GET /auth/users/<email> |  Get a single user |
 

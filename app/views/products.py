@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from flask_jwt_extended import (JWTManager, jwt_required, get_jwt_claims)
@@ -43,27 +44,22 @@ class Products(Resource):
             return make_response(jsonify({"message":"Price is a required field"}), 404)
         
         else:
-            self.user.add_product(product_category,product_name, product_quantity, price)
-            return make_response(jsonify({'message':'product added successfully'}),201)
+            add_product = self.user.add_product(product_category,product_name, product_quantity, price)
+            return add_product
     
     @jwt_required
     def get(self):
         """Fetch all products in database
         """
         products = self.user.get_all_products()
-        # check_product = [product for product in products if product["product_name"]==product_name]
-        if products:
-            return make_response(jsonify({"products":products}),200)
-        else:
-            return make_response(jsonify({"message":"No products available"}))
-            # return make_response(jsonify({"message":"No products available"}),204)
+        return make_response(jsonify({"products":products}),200)
 
 class UpdateProduct(Resource):
     def __init__(self):
         self.user = ProductsData()
 
     @jwt_required   
-    def put(self, prodid):
+    def put(self, product_id):
         """updates a single requested product in a database
         """
          # user must be an admin
@@ -86,10 +82,8 @@ class UpdateProduct(Resource):
         elif not product_name:
             return make_response(jsonify({"message":"Product Name required"}), 404)
         else:
-            data = self.user.update_product(product_category, product_name, product_quantity, price, prodid)
-            return make_response(jsonify({'message':'product successfully updated'}), 201)
-
-            
+            data = self.user.update_product(product_category, product_name, product_quantity, price, product_id)
+            return data            
 
 class DeleteProduct(Resource):
     """delete a product in a database
@@ -100,16 +94,25 @@ class DeleteProduct(Resource):
         self.user = ProductsData()
 
     @jwt_required
-    def delete(self, prodid):
-         # user must be an admin
+    def delete(self, product_id):
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}),403)
+            return make_response(jsonify({"message": "Sorry, you don't have administrator rights"}), 403)
+            
+        delete_product = self.user.delete_product(product_id)
+        return delete_product
 
+# get individual product
+class GetSingleProduct(Resource):
+    def __init__(self):
+        self.user = ProductsData()
+
+    @jwt_required
+    def get(self, product_id):
         products = self.user.get_all_products()
-        check_product = [product for product in products if product["productid"] == prodid]
+        check_product = [product for product in products if product["productid"] == product_id]
         if not check_product:
-            self.user.delete_product(prodid)
-            return make_response(jsonify({'message':'product deleted'}), 200)
+            product = self.user.get_single_product(product_id)
+            return product
         else:
             return make_response(jsonify({"message":"product does not exist"}), 404)

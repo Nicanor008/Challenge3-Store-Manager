@@ -1,5 +1,5 @@
 import json
-from base_test import BaseTest
+from tests.base_test import BaseTest
 
 
 class TestRegister(BaseTest):  
@@ -73,19 +73,6 @@ class TestRegister(BaseTest):
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'], 'Email cannot be blank')
         self.assertEqual(response.status_code, 404)
-
-
-    def test_successful_Login(self):
-        response = self.client.post(
-            self.login,
-            data = json.dumps(dict(
-                email="nic@nic.com",
-                password = "nicki"
-            )),
-            content_type = 'application/json'
-        )
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200)
     
     # empty email on login
     def test_empty_email_onLogin(self):

@@ -9,8 +9,6 @@ from app.models.db import init_db
 # The required format of an email-address
 email_format = r"(^[a-zA-z0-9_.]+@[a-zA-z0-9-]+\.[a-z]+$)"       
 
-# user = UsersData()
-
 class Register(Resource, UsersData):
     """Admin to register users
         Returns jsonify users data accordingly
@@ -25,7 +23,7 @@ class Register(Resource, UsersData):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return jsonify({"message": "Sorry, you don't have administrator rights"})
+            return {"message": "Sorry, you don't have administrator rights"}, 403
         data = request.get_json()
 
         username = data.get("username")
@@ -37,14 +35,16 @@ class Register(Resource, UsersData):
 
         # if user already exists
         user_exist = self.user.get_all_users()
-        print(user_exist)
         user = [user for user in user_exist if user['email'] == email]
-        print(user)
         if user:
             return make_response(jsonify({"message":"user already exist"}))
         try:
             if not email:
                 response =  make_response(jsonify({"message":"Email cannot be blank"}), 404)
+            elif re.search(r"\s", username):
+                return {"message":"Username cannot be a whitespace"}
+            elif re.search(r"\s", password):
+                return {"message":"password cannot be a whitespace"}
             elif not password:
                 response =  make_response(jsonify({"message":"Password field cannot be blank"}), 404)
             elif not username:
@@ -59,19 +59,15 @@ class Register(Resource, UsersData):
 
             return response
         except Exception:
-            return make_response(jsonify({"message":"user already exist"}))
-
+            return make_response(jsonify({"message":"user already exist"}), 409)
 
 class Login(Resource, UsersData):
 
     def __init__(self):
         self.user = UsersData()
-        self.db = init_db()
-        self.curr = self.db.cursor
 
     def post(self):
         """login users
-        
         users should be already registered 
         """
         data = request.get_json()
@@ -81,6 +77,10 @@ class Login(Resource, UsersData):
 
         if not email:
             response = make_response(jsonify({"message":"email required"}), 404)
+        elif re.search(r"\s", email):
+            return make_response(jsonify({"message":"email cannot be a whitespace"}), 400)
+        elif re.search(r"\s", password):
+            return make_response(jsonify({"message":"password cannot be a whitespace"}), 400)
         elif not password:
             response = make_response(jsonify({"message":"password required"}), 404)
         elif not re.match(email_format, email):
@@ -91,15 +91,14 @@ class Login(Resource, UsersData):
                 expires = datetime.timedelta(minutes=60)
                 user = self.user.get_user(email)
                 access_token = create_access_token(identity=user, expires_delta=expires)
-                response = jsonify({"token":access_token, "message":"Login successful"})
+                response = jsonify({"token":access_token, "message":"Login successful", "role":current_user})
             else:
-                response =  jsonify({"Message":"wrong login credentials"}, 401)
+                response =  {"Message":"wrong login credentials"}, 401
            
         return response
 
 class SingleUsers(Resource):
     """fetch single user in database using email
-
     Only accessible to admin
     """  
     def __init__(self):
@@ -117,7 +116,6 @@ class SingleUsers(Resource):
 
 class All_Users(Resource):
     """fetch all users in database
-    
     only accessible to admin
     """  
     def __init__(self):
@@ -128,6 +126,6 @@ class All_Users(Resource):
          # user must be an admin
         claims = get_jwt_claims()
         if claims['role'] != "admin":
-            return jsonify({"message": "Sorry, you don't have administrator rights"})
+            return {"message": "Sorry, you don't have administrator rights"}, 403
         response = self.user.get_all_users()
         return response

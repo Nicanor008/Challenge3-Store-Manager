@@ -6,7 +6,6 @@ class Config(object):
     """
     DEBUG = False
     DATABASE_URL = os.getenv('DATABASE_URL')
-    # DATABASE_URL = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
 class DevelopmentConfig(Config):
     """
         Configurations for Development.
@@ -14,7 +13,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     os.environ['ENV'] = 'development'
     DATABASE_URL = "dbname='storemanager' host='localhost' port='5432' user='postgres' password='nic'"
-    # os.environ["ENV"] ="development"
+    os.environ["ENV"] ="development"
 
 class TestingConfig(Config):
     """

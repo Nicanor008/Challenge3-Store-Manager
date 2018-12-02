@@ -13,14 +13,15 @@ class UsersData():
         return self.db.commit()
 
     def login(self, email, password):
-        self.curr.execute("SELECT * FROM users WHERE email=(%s) AND password=(%s)",(email, password,))
-        return self.curr.fetchone()
+        self.curr.execute("SELECT role FROM users WHERE email=(%s) AND password=(%s)",(email, password,))
+        role = self.curr.fetchone()
+        return role
     
     def get_user(self, email):
         self.curr.execute("SELECT * FROM users WHERE email=%s", (email,))
         user_data = self.curr.fetchone()
         if not user_data:
-            return {"message":"User not found"}
+            return {"message":"User not found"}, 404
 
         for user in user_data:
             user = dict(

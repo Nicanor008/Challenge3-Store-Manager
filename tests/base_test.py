@@ -4,7 +4,6 @@ from app import create_app
 from instance.config import app_config
 from app.models.db import drop_tables, create_tables
 
-
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_name='testing')
@@ -16,7 +15,7 @@ class BaseTest(unittest.TestCase):
         self.register = '/auth/signup'
         self.login = '/auth/login'
         self.products_url = '/products'
-        self.single_product_url = '/products/110'
+        self.single_product_url = '/products/1'
         self.sale_url = '/sales'
         self.single_user = 'auth/users/nic@nic.com'
         self.all_users = 'auth/users'
@@ -37,7 +36,6 @@ class BaseTest(unittest.TestCase):
             content_type = 'application/json'
         )
 
-
         self.login_admin = self.client.post(
             self.login,
             data = json.dumps(dict(
@@ -48,7 +46,6 @@ class BaseTest(unittest.TestCase):
         )
         result = json.loads(self.login_admin.data)
         self.token_admin = result['token']
-
 
         self.register_attendant = self.client.post(
             self.register,
@@ -91,8 +88,7 @@ class BaseTest(unittest.TestCase):
             "product_quantity" : 2,
             "price" : 140000,
             "added_by" : 12
-        }
-        
+        } 
 
     def tearDown(self):
         drop_tables()
