@@ -52,10 +52,7 @@ class Products(Resource):
         """Fetch all products in database
         """
         products = self.user.get_all_products()
-        if products:
-            return make_response(jsonify({"products":products}),200)
-        else:
-            return make_response(jsonify({"message":"No products available"}), 204)
+        return make_response(jsonify({"products":products}),200)
 
 class UpdateProduct(Resource):
     def __init__(self):

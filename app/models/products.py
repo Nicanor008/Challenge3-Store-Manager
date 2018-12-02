@@ -67,9 +67,9 @@ class ProductsData():
             
             self.curr.execute("INSERT INTO products (category_id, product_name, product_quantity, price) VALUES(%s, %s, %s,  %s)", ("null", product_name,product_quantity, price,))
             self.db.commit()
-            return {'message':'product added successfully'}
+            return {'message':'product added successfully'}, 201
         except ValueError:
-            response = {'message':'Product Quantity and price should only be an integer'}
+            response = {'message':'Product Quantity and price should only be an integer'}, 406
             return response
 
     # update a product
